@@ -1,5 +1,5 @@
 {
-  "version": "24025b14",
+  "version": "746cbb81",
   "entry": {
     "module": "/build/entry.client-JHHC3IDZ.js",
     "imports": [
@@ -11,7 +11,7 @@
     "root": {
       "id": "root",
       "path": "",
-      "module": "/build/root-HHLBQK5R.js",
+      "module": "/build/root-DUJQ2WJ2.js",
       "hasAction": false,
       "hasLoader": false,
       "hasCatchBoundary": true,
@@ -108,5 +108,5 @@
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-24025B14.js"
+  "url": "/build/manifest-746CBB81.js"
 }

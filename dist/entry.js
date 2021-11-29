@@ -6605,7 +6605,7 @@ var init_browser3 = __esm({
 var require_assets = __commonJS({
   "build/assets.json"(exports, module) {
     module.exports = {
-      version: "24025b14",
+      version: "746cbb81",
       entry: {
         module: "/build/entry.client-JHHC3IDZ.js",
         imports: [
@@ -6617,7 +6617,7 @@ var require_assets = __commonJS({
         root: {
           id: "root",
           path: "",
-          module: "/build/root-HHLBQK5R.js",
+          module: "/build/root-DUJQ2WJ2.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: true,
@@ -6714,7 +6714,7 @@ var require_assets = __commonJS({
           hasErrorBoundary: false
         }
       },
-      url: "/build/manifest-24025B14.js"
+      url: "/build/manifest-746CBB81.js"
     };
   }
 });
@@ -6789,7 +6789,6 @@ var require_build = __commonJS({
       ];
     };
     function App() {
-      console.log({ window: typeof document });
       return /* @__PURE__ */ React2.createElement(Document, null, /* @__PURE__ */ React2.createElement(Layout, null, /* @__PURE__ */ React2.createElement(import_remix2.Outlet, null)));
     }
     function ErrorBoundary({ error }) {
@@ -7232,7 +7231,6 @@ async function denoHandler(_req) {
       }
     });
   } catch (e) {
-    console.log(e.code);
     if (e.code !== "EISDIR" && e.code !== "ENOENT") {
       throw e;
     }

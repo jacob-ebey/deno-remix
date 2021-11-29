@@ -17,7 +17,6 @@ async function denoHandler(_req: Request): Promise<Response> {
       },
     });
   } catch (e: any) {
-    console.log(e.code);
     if (e.code !== "EISDIR" && e.code !== "ENOENT") {
       throw e;
     }

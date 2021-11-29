@@ -28,7 +28,6 @@ export let links: LinksFunction = () => {
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
-  console.log({ window: typeof document });
   return (
     <Document>
       <Layout>
