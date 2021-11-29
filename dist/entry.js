@@ -5904,7 +5904,7 @@ function useScrollRestoration() {
   useBeforeUnload(React.useCallback(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
   }, []));
-  if (typeof window !== "undefined") {
+  if (typeof document !== "undefined") {
     React.useLayoutEffect(() => {
       if (!hydrated) {
         hydrated = true;
@@ -5943,7 +5943,7 @@ var init_scroll_restoration = __esm({
     init_components();
     STORAGE_KEY = "positions";
     positions = {};
-    if (typeof window !== "undefined") {
+    if (typeof document !== "undefined") {
       let sessionPositions = sessionStorage.getItem(STORAGE_KEY);
       if (sessionPositions) {
         positions = JSON.parse(sessionPositions);
@@ -6605,11 +6605,11 @@ var init_browser3 = __esm({
 var require_assets = __commonJS({
   "build/assets.json"(exports, module) {
     module.exports = {
-      version: "b0fe4c90",
+      version: "24025b14",
       entry: {
-        module: "/build/entry.client-7HIW2GSJ.js",
+        module: "/build/entry.client-JHHC3IDZ.js",
         imports: [
-          "/build/_shared/chunk-BYVPAFZF.js",
+          "/build/_shared/chunk-42QCTZ7V.js",
           "/build/_shared/chunk-AKSB5QXU.js"
         ]
       },
@@ -6617,7 +6617,7 @@ var require_assets = __commonJS({
         root: {
           id: "root",
           path: "",
-          module: "/build/root-N6QGY2KW.js",
+          module: "/build/root-HHLBQK5R.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: true,
@@ -6627,7 +6627,7 @@ var require_assets = __commonJS({
           id: "routes/demos/about",
           parentId: "root",
           path: "demos/about",
-          module: "/build/routes/demos/about-62XO37KF.js",
+          module: "/build/routes/demos/about-BTC63KS4.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: false,
@@ -6637,7 +6637,7 @@ var require_assets = __commonJS({
           id: "routes/demos/about/index",
           parentId: "routes/demos/about",
           index: true,
-          module: "/build/routes/demos/about/index-5OJRA2GH.js",
+          module: "/build/routes/demos/about/index-BGWJGOYG.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: false,
@@ -6647,7 +6647,7 @@ var require_assets = __commonJS({
           id: "routes/demos/about/whoa",
           parentId: "routes/demos/about",
           path: "whoa",
-          module: "/build/routes/demos/about/whoa-UO3IFWHS.js",
+          module: "/build/routes/demos/about/whoa-DSRBPFJ7.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: false,
@@ -6657,7 +6657,7 @@ var require_assets = __commonJS({
           id: "routes/demos/actions",
           parentId: "root",
           path: "demos/actions",
-          module: "/build/routes/demos/actions-3I4C4C24.js",
+          module: "/build/routes/demos/actions-AY4GVC4A.js",
           hasAction: true,
           hasLoader: false,
           hasCatchBoundary: false,
@@ -6677,7 +6677,7 @@ var require_assets = __commonJS({
           id: "routes/demos/params",
           parentId: "root",
           path: "demos/params",
-          module: "/build/routes/demos/params-532TF3PY.js",
+          module: "/build/routes/demos/params-OKAETW3Z.js",
           hasAction: false,
           hasLoader: false,
           hasCatchBoundary: false,
@@ -6687,7 +6687,7 @@ var require_assets = __commonJS({
           id: "routes/demos/params/$id",
           parentId: "routes/demos/params",
           path: ":id",
-          module: "/build/routes/demos/params/$id-3OZ7AJON.js",
+          module: "/build/routes/demos/params/$id-IW2AKTT7.js",
           hasAction: false,
           hasLoader: true,
           hasCatchBoundary: true,
@@ -6707,14 +6707,14 @@ var require_assets = __commonJS({
           id: "routes/index",
           parentId: "root",
           index: true,
-          module: "/build/routes/index-SFAKYUSC.js",
+          module: "/build/routes/index-QQRWCYUF.js",
           hasAction: false,
           hasLoader: true,
           hasCatchBoundary: false,
           hasErrorBoundary: false
         }
       },
-      url: "/build/manifest-B0FE4C90.js"
+      url: "/build/manifest-24025B14.js"
     };
   }
 });

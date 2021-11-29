@@ -1,3 +1,25 @@
+diff --git a/node_modules/@remix-run/react/browser/scroll-restoration.js b/node_modules/@remix-run/react/browser/scroll-restoration.js
+index d0dff51..e99ae4b 100644
+--- a/node_modules/@remix-run/react/browser/scroll-restoration.js
++++ b/node_modules/@remix-run/react/browser/scroll-restoration.js
+@@ -15,7 +15,7 @@ import { useBeforeUnload, useTransition } from './components.js';
+ let STORAGE_KEY = "positions";
+ let positions = {};
+ 
+-if (typeof window !== "undefined") {
++if (typeof document !== "undefined") {
+   let sessionPositions = sessionStorage.getItem(STORAGE_KEY);
+ 
+   if (sessionPositions) {
+@@ -74,7 +74,7 @@ function useScrollRestoration() {
+     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
+   }, []));
+ 
+-  if (typeof window !== "undefined") {
++  if (typeof document !== "undefined") {
+     // eslint-disable-next-line
+     React.useLayoutEffect(() => {
+       // don't do anything on hydration, the component already did this with an
 diff --git a/node_modules/@remix-run/react/scroll-restoration.js b/node_modules/@remix-run/react/scroll-restoration.js
 index ad0c2ae..405e086 100644
 --- a/node_modules/@remix-run/react/scroll-restoration.js
