@@ -1,0 +1,13 @@
+diff --git a/node_modules/@remix-run/server-runtime/server.js b/node_modules/@remix-run/server-runtime/server.js
+index 82efef2..c243cea 100644
+--- a/node_modules/@remix-run/server-runtime/server.js
++++ b/node_modules/@remix-run/server-runtime/server.js
+@@ -167,7 +167,7 @@ async function handleDataRequest(request, loadContext, build, platform, matches)
+     let headers = new Headers(response.headers);
+     headers.set("X-Remix-Redirect", headers.get("Location"));
+     headers.delete("Location");
+-    return new Response("", {
++    return new Response(null, {
+       status: 204,
+       headers
+     });
