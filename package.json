@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run build:remix && npm run build:deno",
     "build:remix": "remix build",
-    "build:deno": "esbuild --define:process.env.NODE_ENV='\"production\"' --format=esm --minify --bundle --sourcemap --outdir=dist ./deno/entry.ts",
+    "build:deno": "esbuild --define:process.env.NODE_ENV='\"production\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
     "dev": "remix dev",
     "postinstall": "patch-package && remix setup cloudflare-workers",
     "start": "deno run --allow-net --allow-read ./dist/entry.js"
