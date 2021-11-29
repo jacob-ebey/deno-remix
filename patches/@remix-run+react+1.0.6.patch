@@ -1,0 +1,22 @@
+diff --git a/node_modules/@remix-run/react/scroll-restoration.js b/node_modules/@remix-run/react/scroll-restoration.js
+index ad0c2ae..405e086 100644
+--- a/node_modules/@remix-run/react/scroll-restoration.js
++++ b/node_modules/@remix-run/react/scroll-restoration.js
+@@ -39,7 +39,7 @@ var React__namespace = /*#__PURE__*/_interopNamespace(React);
+ let STORAGE_KEY = "positions";
+ let positions = {};
+ 
+-if (typeof window !== "undefined") {
++if (typeof document !== "undefined") {
+   let sessionPositions = sessionStorage.getItem(STORAGE_KEY);
+ 
+   if (sessionPositions) {
+@@ -98,7 +98,7 @@ function useScrollRestoration() {
+     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
+   }, []));
+ 
+-  if (typeof window !== "undefined") {
++  if (typeof document !== "undefined") {
+     // eslint-disable-next-line
+     React__namespace.useLayoutEffect(() => {
+       // don't do anything on hydration, the component already did this with an

@@ -1,5 +1,5 @@
 {
-  "version": "92f0f204",
+  "version": "b0fe4c90",
   "entry": {
     "module": "/build/entry.client-7HIW2GSJ.js",
     "imports": [
@@ -11,7 +11,7 @@
     "root": {
       "id": "root",
       "path": "",
-      "module": "/build/root-3P5R2V7B.js",
+      "module": "/build/root-N6QGY2KW.js",
       "hasAction": false,
       "hasLoader": false,
       "hasCatchBoundary": true,
@@ -108,5 +108,5 @@
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-92F0F204.js"
+  "url": "/build/manifest-B0FE4C90.js"
 }

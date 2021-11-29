@@ -79,6 +79,7 @@ var links = () => {
   ];
 };
 function App() {
+  console.log({ window: typeof document });
   return /* @__PURE__ */ React.createElement(Document, null, /* @__PURE__ */ React.createElement(Layout, null, /* @__PURE__ */ React.createElement(import_remix2.Outlet, null)));
 }
 function ErrorBoundary({ error }) {
