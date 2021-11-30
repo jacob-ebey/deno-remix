@@ -4,11 +4,14 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "npm run build:remix && npm run build:deno",
-    "build:remix": "remix build",
-    "build:deno": "esbuild --define:process.env.NODE_ENV='\"production\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
-    "dev": "remix dev",
     "postinstall": "patch-package && remix setup cloudflare-workers",
+    "build": "npm run build:remix && npm run build:deno",
+    "build:deno": "esbuild --define:process.env.NODE_ENV='\"production\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
+    "build:remix": "remix build",
+    "watch:deno": "esbuild --watch --define:process.env.NODE_ENV='\"development\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
+    "watch:remix": "cross-env NODE_ENV=development remix watch",
+    "dev": "cross-env NODE_ENV=production npm run build && run-p watch:*",
+    "watch:server": "deno run --watch=./dist/entry.js --allow-net --allow-read ./dist/entry.js",
     "start": "deno run --allow-net --allow-read ./dist/entry.js"
   },
   "dependencies": {
@@ -21,8 +24,11 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^1.0.6",
+    "@types/mime": "^2.0.3",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
+    "cross-env": "^7.0.3",
+    "npm-run-all": "^4.1.5",
     "patch-package": "^6.4.7",
     "typescript": "^4.1.2"
   },

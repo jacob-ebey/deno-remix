@@ -6605,7 +6605,7 @@ var init_browser3 = __esm({
 var require_assets = __commonJS({
   "build/assets.json"(exports, module) {
     module.exports = {
-      version: "746cbb81",
+      version: "9fa8cef1",
       entry: {
         module: "/build/entry.client-JHHC3IDZ.js",
         imports: [
@@ -6707,14 +6707,14 @@ var require_assets = __commonJS({
           id: "routes/index",
           parentId: "root",
           index: true,
-          module: "/build/routes/index-QQRWCYUF.js",
+          module: "/build/routes/index-4FLTVRYY.js",
           hasAction: false,
           hasLoader: true,
           hasCatchBoundary: false,
           hasErrorBoundary: false
         }
       },
-      url: "/build/manifest-746CBB81.js"
+      url: "/build/manifest-9FA8CEF1.js"
     };
   }
 });
@@ -7115,7 +7115,7 @@ var require_build = __commonJS({
       let data = (0, import_remix9.useLoaderData)();
       return /* @__PURE__ */ React2.createElement("div", {
         className: "remix__page"
-      }, /* @__PURE__ */ React2.createElement("main", null, /* @__PURE__ */ React2.createElement("h2", null, "Welcome to Remix!"), /* @__PURE__ */ React2.createElement("p", null, "We're stoked that you're here. \u{1F973}"), /* @__PURE__ */ React2.createElement("p", null, "Feel free to take a look around the code to see how Remix does things, it might be a bit different than what you\u2019re used to. When you're ready to dive deeper, we've got plenty of resources to get you up-and-running quickly."), /* @__PURE__ */ React2.createElement("p", null, "Check out all the demos in this starter, and then just delete the", " ", /* @__PURE__ */ React2.createElement("code", null, "app/routes/demos"), " and ", /* @__PURE__ */ React2.createElement("code", null, "app/styles/demos"), " ", "folders when you're ready to turn this into your next project.")), /* @__PURE__ */ React2.createElement("aside", null, /* @__PURE__ */ React2.createElement("h2", null, "Demos In This App"), /* @__PURE__ */ React2.createElement("ul", null, data.demos.map((demo) => /* @__PURE__ */ React2.createElement("li", {
+      }, /* @__PURE__ */ React2.createElement("main", null, /* @__PURE__ */ React2.createElement("h2", null, "Welcome to Remix!!"), /* @__PURE__ */ React2.createElement("p", null, "We're stoked that you're here. \u{1F973}"), /* @__PURE__ */ React2.createElement("p", null, "Feel free to take a look around the code to see how Remix does things, it might be a bit different than what you\u2019re used to. When you're ready to dive deeper, we've got plenty of resources to get you up-and-running quickly."), /* @__PURE__ */ React2.createElement("p", null, "Check out all the demos in this starter, and then just delete the", " ", /* @__PURE__ */ React2.createElement("code", null, "app/routes/demos"), " and ", /* @__PURE__ */ React2.createElement("code", null, "app/styles/demos"), " ", "folders when you're ready to turn this into your next project.")), /* @__PURE__ */ React2.createElement("aside", null, /* @__PURE__ */ React2.createElement("h2", null, "Demos In This App"), /* @__PURE__ */ React2.createElement("ul", null, data.demos.map((demo) => /* @__PURE__ */ React2.createElement("li", {
         key: demo.to,
         className: "remix__page__resource"
       }, /* @__PURE__ */ React2.createElement(import_remix9.Link, {
@@ -7220,16 +7220,17 @@ var import_mime = __toModule(require_mime());
 var import_server_runtime2 = __toModule(require_server_runtime());
 var build = __toModule(require_build());
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
-var handler = (0, import_server_runtime2.createRequestHandler)(build);
+var handler = (0, import_server_runtime2.createRequestHandler)(build, {});
 async function denoHandler(_req) {
   try {
     let url = new URL(_req.url);
     let file = await Deno.readFile(`./public${url.pathname}`);
-    return new Response(file, {
-      headers: {
-        "Content-Type": import_mime.default.getType(url.pathname)
-      }
-    });
+    let headers = new Headers();
+    let contentType = import_mime.default.getType(url.pathname);
+    if (contentType) {
+      headers.set("Content-Type", contentType);
+    }
+    return new Response(file, { headers });
   } catch (e) {
     if (e.code !== "EISDIR" && e.code !== "ENOENT") {
       throw e;

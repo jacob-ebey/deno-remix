@@ -1,5 +1,5 @@
 {
-  "version": "746cbb81",
+  "version": "9fa8cef1",
   "entry": {
     "module": "/build/entry.client-JHHC3IDZ.js",
     "imports": [
@@ -101,12 +101,12 @@
       "id": "routes/index",
       "parentId": "root",
       "index": true,
-      "module": "/build/routes/index-QQRWCYUF.js",
+      "module": "/build/routes/index-4FLTVRYY.js",
       "hasAction": false,
       "hasLoader": true,
       "hasCatchBoundary": false,
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-746CBB81.js"
+  "url": "/build/manifest-9FA8CEF1.js"
 }
