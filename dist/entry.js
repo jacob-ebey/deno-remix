@@ -7221,6 +7221,10 @@ var import_server_runtime2 = __toModule(require_server_runtime());
 var build = __toModule(require_build());
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
 var handler = (0, import_server_runtime2.createRequestHandler)(build, {});
+var files = new Map();
+setInterval(() => {
+  files = new Map();
+}, 300);
 async function denoHandler(_req) {
   try {
     let url = new URL(_req.url);
@@ -7234,10 +7238,11 @@ async function denoHandler(_req) {
     } else {
       headers.set("Cache-Control", "public, max-age=600");
     }
-    let file = await Deno.readFile(`./public${url.pathname}`);
-    if (url.pathname === "/favicon.ico") {
-      console.log({ contentType, file: `./public${url.pathname}` });
+    if (files.has(url.pathname)) {
+      return new Response(files.get(url.pathname), { headers });
     }
+    let file = await Deno.readFile(`./public${url.pathname}`);
+    files.set(url.pathname, file);
     return new Response(file, { headers });
   } catch (e) {
     if (e.code !== "EISDIR" && e.code !== "ENOENT") {
