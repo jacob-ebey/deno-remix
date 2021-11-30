@@ -7230,6 +7230,11 @@ async function denoHandler(_req) {
     if (contentType) {
       headers.set("Content-Type", contentType);
     }
+    if (url.pathname.startsWith("/build/")) {
+      headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    } else {
+      headers.set("Cache-Control", "public, max-age=600");
+    }
     if (files.has(url.pathname)) {
       return new Response(files.get(url.pathname), { headers });
     }
