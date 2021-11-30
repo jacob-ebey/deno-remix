@@ -21,7 +21,7 @@ async function build() {
     entryPoints: ["./deno/entry.ts"],
     outdir: "./dist",
     format: "esm",
-    platform: "node",
+    platform: "neutral",
     mainFields: ["module", "browser", "main"],
     bundle: true,
     watch: process.env.NODE_ENV === "development",

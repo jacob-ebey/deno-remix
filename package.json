@@ -4,8 +4,8 @@
   "description": "",
   "license": "",
   "scripts": {
-    "clean": "rm -rf ./build ./dist ./public/build",
-    "postinstall": "patch-package && remix setup cloudflare-workers",
+    "clean": "rm -rf ./.cache ./build ./dist ./public/build",
+    "postinstall": "patch-package && node ./patch.js && remix setup cloudflare-workers",
     "build": "npm run clean && run-s build:remix build:deno",
     "build:deno": "cross-env NODE_ENV=production node ./build.js",
     "build:remix": "remix build",
