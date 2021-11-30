@@ -7221,15 +7221,20 @@ var import_server_runtime2 = __toModule(require_server_runtime());
 var build = __toModule(require_build());
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
 var handler = (0, import_server_runtime2.createRequestHandler)(build, {});
+var files = new Map();
 async function denoHandler(_req) {
   try {
     let url = new URL(_req.url);
-    let file = await Deno.readFile(`./public${url.pathname}`);
     let headers = new Headers();
     let contentType = import_mime.default.getType(url.pathname);
     if (contentType) {
       headers.set("Content-Type", contentType);
     }
+    if (files.has(url.pathname)) {
+      return new Response(files.get(url.pathname), { headers });
+    }
+    let file = await Deno.readFile(`./public${url.pathname}`);
+    files.set(url.pathname, file);
     return new Response(file, { headers });
   } catch (e) {
     if (e.code !== "EISDIR" && e.code !== "ENOENT") {

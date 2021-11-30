@@ -9,17 +9,25 @@ import * as build from "../build/index.js";
 
 let handler = createRequestHandler(build, {});
 
+let files = new Map<string, Uint8Array>();
+
 async function denoHandler(_req: Request): Promise<Response> {
   try {
     let url = new URL(_req.url);
 
-    // @ts-expect-error
-    let file = await Deno.readFile(`./public${url.pathname}`);
     let headers = new Headers();
     let contentType = mime.getType(url.pathname);
     if (contentType) {
       headers.set("Content-Type", contentType);
     }
+
+    if (files.has(url.pathname)) {
+      return new Response(files.get(url.pathname), { headers });
+    }
+
+    // @ts-expect-error
+    let file = await Deno.readFile(`./public${url.pathname}`);
+    files.set(url.pathname, file);
 
     return new Response(file, { headers });
   } catch (e: any) {
