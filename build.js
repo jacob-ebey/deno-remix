@@ -46,6 +46,8 @@ async function build() {
               isBareModuleId(path) &&
               path !== "remix" &&
               !path.startsWith("@remix-run/")
+              // TODO: figure out why esm.sh can't resolve @remix-run/react
+              // !path.startsWith("@remix-run/react")
             ) {
               let packageName = getNpmPackageName(path);
 
