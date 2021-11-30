@@ -1,46 +1,23 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __export = (target, all) => {
   __markAsModule(target);
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
-var __reExport = (target, module2, desc) => {
-  if (module2 && typeof module2 === "object" || typeof module2 === "function") {
-    for (let key of __getOwnPropNames(module2))
-      if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
-  }
-  return target;
-};
-var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
-};
-
-// <stdin>
-__export(exports, {
-  assets: () => import_assets.default,
-  entry: () => entry,
-  routes: () => routes
-});
 
 // node_modules/@remix-run/dev/compiler/shims/react.ts
-var React = __toModule(require("react"));
+import * as React from "react";
 
 // app/entry.server.tsx
 var entry_server_exports = {};
 __export(entry_server_exports, {
   default: () => handleRequest
 });
-var import_server = __toModule(require("react-dom/server"));
-var import_remix = __toModule(require("remix"));
+import { renderToString } from "react-dom/server";
+import { RemixServer } from "remix";
 function handleRequest(request, responseStatusCode, responseHeaders, remixContext) {
-  let markup = (0, import_server.renderToString)(/* @__PURE__ */ React.createElement(import_remix.RemixServer, {
+  let markup = renderToString(/* @__PURE__ */ React.createElement(RemixServer, {
     context: remixContext,
     url: request.url
   }));
@@ -59,7 +36,16 @@ __export(root_exports, {
   default: () => App,
   links: () => links
 });
-var import_remix2 = __toModule(require("remix"));
+import {
+  Link,
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useCatch
+} from "remix";
 
 // app/styles/global.css
 var global_default = "/build/_assets/global-4MW7DZR4.css";
@@ -79,7 +65,7 @@ var links = () => {
   ];
 };
 function App() {
-  return /* @__PURE__ */ React.createElement(Document, null, /* @__PURE__ */ React.createElement(Layout, null, /* @__PURE__ */ React.createElement(import_remix2.Outlet, null)));
+  return /* @__PURE__ */ React.createElement(Document, null, /* @__PURE__ */ React.createElement(Layout, null, /* @__PURE__ */ React.createElement(Outlet, null)));
 }
 function ErrorBoundary({ error }) {
   console.error(error);
@@ -88,7 +74,7 @@ function ErrorBoundary({ error }) {
   }, /* @__PURE__ */ React.createElement(Layout, null, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h1", null, "There was an error"), /* @__PURE__ */ React.createElement("p", null, error.message), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement("p", null, "Hey, developer, you should replace this with what you want your users to see."))));
 }
 function CatchBoundary() {
-  let caught = (0, import_remix2.useCatch)();
+  let caught = useCatch();
   let message;
   switch (caught.status) {
     case 401:
@@ -115,7 +101,7 @@ function Document({
   }), /* @__PURE__ */ React.createElement("meta", {
     name: "viewport",
     content: "width=device-width,initial-scale=1"
-  }), title ? /* @__PURE__ */ React.createElement("title", null, title) : null, /* @__PURE__ */ React.createElement(import_remix2.Meta, null), /* @__PURE__ */ React.createElement(import_remix2.Links, null)), /* @__PURE__ */ React.createElement("body", null, children, /* @__PURE__ */ React.createElement(import_remix2.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_remix2.Scripts, null), process.env.NODE_ENV === "development" && /* @__PURE__ */ React.createElement(import_remix2.LiveReload, null)));
+  }), title ? /* @__PURE__ */ React.createElement("title", null, title) : null, /* @__PURE__ */ React.createElement(Meta, null), /* @__PURE__ */ React.createElement(Links, null)), /* @__PURE__ */ React.createElement("body", null, children, /* @__PURE__ */ React.createElement(ScrollRestoration, null), /* @__PURE__ */ React.createElement(Scripts, null), process.env.NODE_ENV === "development" && /* @__PURE__ */ React.createElement(LiveReload, null)));
 }
 function Layout({ children }) {
   return /* @__PURE__ */ React.createElement("div", {
@@ -124,14 +110,14 @@ function Layout({ children }) {
     className: "remix-app__header"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "container remix-app__header-content"
-  }, /* @__PURE__ */ React.createElement(import_remix2.Link, {
+  }, /* @__PURE__ */ React.createElement(Link, {
     to: "/",
     title: "Remix",
     className: "remix-app__header-home-link"
   }, /* @__PURE__ */ React.createElement(RemixLogo, null)), /* @__PURE__ */ React.createElement("nav", {
     "aria-label": "Main navigation",
     className: "remix-app__header-nav"
-  }, /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix2.Link, {
+  }, /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "/"
   }, "Home")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("a", {
     href: "https://remix.run/docs"
@@ -180,8 +166,8 @@ __export(actions_exports, {
   default: () => ActionsDemo,
   meta: () => meta
 });
-var import_react = __toModule(require("react"));
-var import_remix3 = __toModule(require("remix"));
+import { useEffect, useRef } from "react";
+import { Form, json, useActionData, redirect } from "remix";
 function meta() {
   return { title: "Actions Demo" };
 }
@@ -189,24 +175,24 @@ var action = async ({ request }) => {
   let formData = await request.formData();
   let answer = formData.get("answer");
   if (typeof answer !== "string") {
-    return (0, import_remix3.json)("Come on, at least try!", { status: 400 });
+    return json("Come on, at least try!", { status: 400 });
   }
   if (answer !== "egg") {
-    return (0, import_remix3.json)(`Sorry, ${answer} is not right.`, { status: 400 });
+    return json(`Sorry, ${answer} is not right.`, { status: 400 });
   }
-  return (0, import_remix3.redirect)("/demos/correct");
+  return redirect("/demos/correct");
 };
 function ActionsDemo() {
-  let actionMessage = (0, import_remix3.useActionData)();
-  let answerRef = (0, import_react.useRef)(null);
-  (0, import_react.useEffect)(() => {
+  let actionMessage = useActionData();
+  let answerRef = useRef(null);
+  useEffect(() => {
     if (actionMessage && answerRef.current) {
       answerRef.current.select();
     }
   }, [actionMessage]);
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix__page"
-  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h2", null, "Actions!"), /* @__PURE__ */ React.createElement("p", null, "This form submission will send a post request that we handle in our `action` export. Any route can export an action to handle data mutations."), /* @__PURE__ */ React.createElement(import_remix3.Form, {
+  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h2", null, "Actions!"), /* @__PURE__ */ React.createElement("p", null, "This form submission will send a post request that we handle in our `action` export. Any route can export an action to handle data mutations."), /* @__PURE__ */ React.createElement(Form, {
     method: "post",
     className: "remix__form"
   }, /* @__PURE__ */ React.createElement("h3", null, "Post an Action"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("i", null, "What is more useful when it is broken?")), /* @__PURE__ */ React.createElement("label", null, /* @__PURE__ */ React.createElement("div", null, "Answer:"), /* @__PURE__ */ React.createElement("input", {
@@ -237,24 +223,24 @@ __export(params_exports, {
   default: () => Boundaries,
   meta: () => meta2
 });
-var import_remix4 = __toModule(require("remix"));
+import { Link as Link2, Outlet as Outlet2 } from "remix";
 function meta2() {
   return { title: "Boundaries Demo" };
 }
 function Boundaries() {
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix__page"
-  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement(import_remix4.Outlet, null)), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Click these Links"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement(Outlet2, null)), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Click these Links"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "."
-  }, "Start over")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, "Start over")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "one"
-  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "one"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "one"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "two"
-  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "two"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "two"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "this-record-does-not-exist"
-  }, "This will be a 404")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, "This will be a 404")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "shh-its-a-secret"
-  }, "And this will be 401 Unauthorized")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(import_remix4.Link, {
+  }, "And this will be 401 Unauthorized")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
     to: "kaboom"
   }, "This one will throw an error")))));
 }
@@ -279,13 +265,13 @@ __export(id_exports, {
   loader: () => loader,
   meta: () => meta3
 });
-var import_remix5 = __toModule(require("remix"));
+import { useCatch as useCatch3, json as json3, useLoaderData as useLoaderData2 } from "remix";
 var loader = async ({ params }) => {
   if (params.id === "this-record-does-not-exist") {
     throw new Response("Not Found", { status: 404 });
   }
   if (params.id === "shh-its-a-secret") {
-    throw (0, import_remix5.json)({ webmasterEmail: "hello@remix.run" }, { status: 401 });
+    throw json3({ webmasterEmail: "hello@remix.run" }, { status: 401 });
   }
   if (params.id === "kaboom") {
     lol();
@@ -293,13 +279,13 @@ var loader = async ({ params }) => {
   return { param: params.id };
 };
 function ParamDemo() {
-  let data = (0, import_remix5.useLoaderData)();
+  let data = useLoaderData2();
   return /* @__PURE__ */ React.createElement("h1", null, "The param is ", /* @__PURE__ */ React.createElement("i", {
     style: { color: "red" }
   }, data.param));
 }
 function CatchBoundary2() {
-  let caught = (0, import_remix5.useCatch)();
+  let caught = useCatch3();
   let message;
   switch (caught.status) {
     case 401:
@@ -328,7 +314,7 @@ __export(about_exports, {
   links: () => links2,
   meta: () => meta4
 });
-var import_remix6 = __toModule(require("remix"));
+import { Outlet as Outlet3 } from "remix";
 
 // app/styles/demos/about.css
 var about_default = "/build/_assets/about-GGM5BPB3.css";
@@ -349,7 +335,7 @@ function Index() {
     className: "about__intro"
   }, /* @__PURE__ */ React.createElement("h2", null, "About Us"), /* @__PURE__ */ React.createElement("p", null, "Ok, so this page isn't really ", /* @__PURE__ */ React.createElement("em", null, "about us"), ", but we did want to show you a few more things Remix can do."), /* @__PURE__ */ React.createElement("p", null, "Did you notice that things look a little different on this page? The CSS that we import in the route file and include in its", " ", /* @__PURE__ */ React.createElement("code", null, "links"), " export is only included on this route and its children."), /* @__PURE__ */ React.createElement("p", null, "Wait a sec...", /* @__PURE__ */ React.createElement("em", null, "its children"), "? To understand what we mean by this,", " ", /* @__PURE__ */ React.createElement("a", {
     href: "https://remix.run/tutorial/4-nested-routes-params"
-  }, "read all about nested routes in the docs"), "."), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement(import_remix6.Outlet, null)));
+  }, "read all about nested routes in the docs"), "."), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement(Outlet3, null)));
 }
 
 // route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/about/index.tsx
@@ -357,9 +343,9 @@ var about_exports2 = {};
 __export(about_exports2, {
   default: () => AboutIndex
 });
-var import_remix7 = __toModule(require("remix"));
+import { Link as Link4 } from "remix";
 function AboutIndex() {
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "You are looking at the index route for the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " URL segment, but there are nested routes as well!"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(import_remix7.Link, {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "You are looking at the index route for the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " URL segment, but there are nested routes as well!"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link4, {
     to: "whoa"
   }, "Check out one of them here."))));
 }
@@ -369,9 +355,9 @@ var whoa_exports = {};
 __export(whoa_exports, {
   default: () => AboutIndex2
 });
-var import_remix8 = __toModule(require("remix"));
+import { Link as Link5 } from "remix";
 function AboutIndex2() {
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "Whoa, this is a nested route! We render the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " layout route component, and its ", /* @__PURE__ */ React.createElement("code", null, "Outlet"), " renders our route component. \u{1F92F}"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(import_remix8.Link, {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "Whoa, this is a nested route! We render the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " layout route component, and its ", /* @__PURE__ */ React.createElement("code", null, "Outlet"), " renders our route component. \u{1F92F}"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link5, {
     to: ".."
   }, "Go back to the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " index."))));
 }
@@ -383,7 +369,7 @@ __export(routes_exports, {
   loader: () => loader2,
   meta: () => meta5
 });
-var import_remix9 = __toModule(require("remix"));
+import { useLoaderData as useLoaderData3, json as json4, Link as Link6 } from "remix";
 var loader2 = () => {
   let data = {
     resources: [
@@ -415,7 +401,7 @@ var loader2 = () => {
       }
     ]
   };
-  return (0, import_remix9.json)(data);
+  return json4(data);
 };
 var meta5 = () => {
   return {
@@ -424,13 +410,13 @@ var meta5 = () => {
   };
 };
 function Index2() {
-  let data = (0, import_remix9.useLoaderData)();
+  let data = useLoaderData3();
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix__page"
   }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h2", null, "Welcome to Remix!!"), /* @__PURE__ */ React.createElement("p", null, "We're stoked that you're here. \u{1F973}"), /* @__PURE__ */ React.createElement("p", null, "Feel free to take a look around the code to see how Remix does things, it might be a bit different than what you\u2019re used to. When you're ready to dive deeper, we've got plenty of resources to get you up-and-running quickly."), /* @__PURE__ */ React.createElement("p", null, "Check out all the demos in this starter, and then just delete the", " ", /* @__PURE__ */ React.createElement("code", null, "app/routes/demos"), " and ", /* @__PURE__ */ React.createElement("code", null, "app/styles/demos"), " ", "folders when you're ready to turn this into your next project.")), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Demos In This App"), /* @__PURE__ */ React.createElement("ul", null, data.demos.map((demo) => /* @__PURE__ */ React.createElement("li", {
     key: demo.to,
     className: "remix__page__resource"
-  }, /* @__PURE__ */ React.createElement(import_remix9.Link, {
+  }, /* @__PURE__ */ React.createElement(Link6, {
     to: demo.to,
     prefetch: "intent"
   }, demo.name)))), /* @__PURE__ */ React.createElement("h2", null, "Resources"), /* @__PURE__ */ React.createElement("ul", null, data.resources.map((resource) => /* @__PURE__ */ React.createElement("li", {
@@ -442,7 +428,7 @@ function Index2() {
 }
 
 // <stdin>
-var import_assets = __toModule(require("./assets.json"));
+import { default as default2 } from "./assets.json";
 var entry = { module: entry_server_exports };
 var routes = {
   "root": {
@@ -526,10 +512,9 @@ var routes = {
     module: routes_exports
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  assets,
+export {
+  default2 as assets,
   entry,
   routes
-});
+};
 //# sourceMappingURL=/build/index.js.map
