@@ -6,14 +6,15 @@
   "scripts": {
     "clean": "rm -rf ./build ./dist ./public/build",
     "postinstall": "patch-package && remix setup cloudflare-workers",
-    "build": "npm run clean && npm run build:remix && npm run build:deno",
-    "build:deno": "esbuild --define:process.env.NODE_ENV='\"production\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
+    "build": "npm run clean && run-s build:remix build:deno",
+    "build:deno": "cross-env NODE_ENV=production node ./build.js",
     "build:remix": "remix build",
-    "watch:deno": "esbuild --watch --define:process.env.NODE_ENV='\"development\"' --format=esm --bundle --sourcemap --outdir=dist ./deno/entry.ts",
-    "watch:remix": "cross-env NODE_ENV=development remix watch",
-    "dev": "cross-env NODE_ENV=production npm run build && run-p watch:*",
+    "watch:deno": "cross-env NODE_ENV=development node ./build.js",
+    "watch:remix": "remix watch",
     "watch:server": "deno run --watch=./dist/entry.js --allow-net --allow-read ./dist/entry.js",
-    "start": "deno run --allow-net --allow-read ./dist/entry.js"
+    "watchall": "run-p watch:*",
+    "dev": "cross-env NODE_ENV=development run-s build:remix build:deno watchall",
+    "start": "cross-env NODE_ENV=production deno run --allow-net --allow-read ./dist/entry.js"
   },
   "dependencies": {
     "@remix-run/cloudflare-workers": "^1.0.6",
