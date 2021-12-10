@@ -2,6 +2,7 @@
  * @type {import('@remix-run/dev/config').AppConfig}
  */
 module.exports = {
+  serverModuleFormat: "esm",
   appDirectory: "app",
   browserBuildDirectory: "public/build",
   publicPath: "/build/",

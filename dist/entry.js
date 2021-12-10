@@ -9,11 +9,7 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// node_modules/@remix-run/server-runtime/browser/index.js
-import { parse, serialize } from "https://esm.sh/cookie@0.4.1?no-check";
-import { splitCookiesString } from "https://esm.sh/set-cookie-parser@2.4.8?no-check";
-import { matchRoutes } from "https://esm.sh/react-router-dom@6.0.2?no-check";
-import jsesc from "https://esm.sh/jsesc@3.0.2?no-check";
+// node_modules/@remix-run/server-runtime/esm/responses.js
 function json(data, init = {}) {
   let responseInit = init;
   if (typeof init === "number") {
@@ -32,9 +28,9 @@ function json(data, init = {}) {
 }
 function redirect(url2, init = 302) {
   let responseInit = init;
-  if (typeof init === "number") {
+  if (typeof responseInit === "number") {
     responseInit = {
-      status: init
+      status: responseInit
     };
   } else if (typeof responseInit.status === "undefined") {
     responseInit.status = 302;
@@ -46,66 +42,102 @@ function redirect(url2, init = 302) {
     headers
   });
 }
-async function loadRouteData(build, routeId, request, context, params) {
-  let routeModule = build.routes[routeId].module;
-  if (!routeModule.loader) {
-    return Promise.resolve(json(null));
-  }
-  let result;
-  try {
-    result = await routeModule.loader({
-      request,
-      context,
-      params
-    });
-  } catch (error) {
-    if (!isResponse(error)) {
-      throw error;
-    }
-    if (!isRedirectResponse(error)) {
-      error.headers.set("X-Remix-Catch", "yes");
-    }
-    result = error;
-  }
-  if (result === void 0) {
-    throw new Error(`You defined a loader for route "${routeId}" but didn't return anything from your \`loader\` function. Please return a value or \`null\`.`);
-  }
-  return isResponse(result) ? result : json(result);
-}
-async function callRouteAction(build, routeId, request, context, params) {
-  let routeModule = build.routes[routeId].module;
-  if (!routeModule.action) {
-    throw new Error(`You made a ${request.method} request to ${request.url} but did not provide an \`action\` for route "${routeId}", so there is no way to handle the request.`);
-  }
-  let result;
-  try {
-    result = await routeModule.action({
-      request,
-      context,
-      params
-    });
-  } catch (error) {
-    if (!isResponse(error)) {
-      throw error;
-    }
-    if (!isRedirectResponse(error)) {
-      error.headers.set("X-Remix-Catch", "yes");
-    }
-    result = error;
-  }
-  if (result === void 0) {
-    throw new Error(`You defined an action for route "${routeId}" but didn't return anything from your \`action\` function. Please return a value or \`null\`.`);
-  }
-  return isResponse(result) ? result : json(result);
-}
-function isCatchResponse(value) {
-  return isResponse(value) && value.headers.get("X-Remix-Catch") != null;
-}
 function isResponse(value) {
   return value != null && typeof value.status === "number" && typeof value.statusText === "string" && typeof value.headers === "object" && typeof value.body !== "undefined";
 }
 function isRedirectResponse(response) {
   return redirectStatusCodes.has(response.status);
+}
+function isCatchResponse(response) {
+  return response.headers.get("X-Remix-Catch") != null;
+}
+var redirectStatusCodes;
+var init_responses = __esm({
+  "node_modules/@remix-run/server-runtime/esm/responses.js"() {
+    redirectStatusCodes = new Set([301, 302, 303, 307, 308]);
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/data.js
+async function callRouteAction({
+  loadContext,
+  match,
+  request
+}) {
+  let action2 = match.route.module.action;
+  if (!action2) {
+    throw new Error(`You made a ${request.method} request to ${request.url} but did not provide an \`action\` for route "${match.route.id}", so there is no way to handle the request.`);
+  }
+  let result;
+  try {
+    result = await action2({
+      request: stripDataParam(stripIndexParam(request.clone())),
+      context: loadContext,
+      params: match.params
+    });
+  } catch (error) {
+    if (!isResponse(error)) {
+      throw error;
+    }
+    if (!isRedirectResponse(error)) {
+      error.headers.set("X-Remix-Catch", "yes");
+    }
+    result = error;
+  }
+  if (result === void 0) {
+    throw new Error(`You defined an action for route "${match.route.id}" but didn't return anything from your \`action\` function. Please return a value or \`null\`.`);
+  }
+  return isResponse(result) ? result : json(result);
+}
+async function callRouteLoader({
+  loadContext,
+  match,
+  request
+}) {
+  let loader3 = match.route.module.loader;
+  if (!loader3) {
+    throw new Error(`You made a ${request.method} request to ${request.url} but did not provide a \`loader\` for route "${match.route.id}", so there is no way to handle the request.`);
+  }
+  let result;
+  try {
+    result = await loader3({
+      request: stripDataParam(stripIndexParam(request.clone())),
+      context: loadContext,
+      params: match.params
+    });
+  } catch (error) {
+    if (!isResponse(error)) {
+      throw error;
+    }
+    if (!isRedirectResponse(error)) {
+      error.headers.set("X-Remix-Catch", "yes");
+    }
+    result = error;
+  }
+  if (result === void 0) {
+    throw new Error(`You defined an action for route "${match.route.id}" but didn't return anything from your \`action\` function. Please return a value or \`null\`.`);
+  }
+  return isResponse(result) ? result : json(result);
+}
+function stripIndexParam(request) {
+  let url2 = new URL(request.url);
+  let indexValues = url2.searchParams.getAll("index");
+  url2.searchParams.delete("index");
+  let indexValuesToKeep = [];
+  for (let indexValue of indexValues) {
+    if (indexValue) {
+      indexValuesToKeep.push(indexValue);
+    }
+  }
+  for (let toKeep of indexValuesToKeep) {
+    url2.searchParams.append("index", toKeep);
+  }
+  return new Request(url2.toString(), request);
+}
+function stripDataParam(request) {
+  let url2 = new URL(request.url);
+  url2.searchParams.delete("_data");
+  return new Request(url2.toString(), request);
 }
 function extractData(response) {
   let contentType = response.headers.get("Content-Type");
@@ -114,6 +146,13 @@ function extractData(response) {
   }
   return response.text();
 }
+var init_data = __esm({
+  "node_modules/@remix-run/server-runtime/esm/data.js"() {
+    init_responses();
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/entry.js
 function createEntryMatches(matches, routes3) {
   return matches.map((match) => ({
     params: match.params,
@@ -127,12 +166,25 @@ function createEntryRouteModules(manifest) {
     return memo;
   }, {});
 }
+var init_entry = __esm({
+  "node_modules/@remix-run/server-runtime/esm/entry.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/errors.js
 async function serializeError(error) {
   return {
     message: error.message,
     stack: error.stack
   };
 }
+var init_errors = __esm({
+  "node_modules/@remix-run/server-runtime/esm/errors.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/headers.js
+import { splitCookiesString } from "https://esm.sh/set-cookie-parser@2.4.8?no-check";
 function getDocumentHeaders(build, matches, routeLoaderResponses, actionResponse) {
   return matches.reduce((parentHeaders, match, index) => {
     let routeModule = build.routes[match.route.id].module;
@@ -158,6 +210,13 @@ function prependCookies(parentHeaders, childHeaders) {
     });
   }
 }
+var init_headers = __esm({
+  "node_modules/@remix-run/server-runtime/esm/headers.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/routeMatching.js
+import { matchRoutes } from "https://esm.sh/react-router-dom@6.1.0?no-check";
 function matchServerRoutes(routes3, pathname) {
   let matches = matchRoutes(routes3, pathname);
   if (!matches)
@@ -168,32 +227,410 @@ function matchServerRoutes(routes3, pathname) {
     route: match.route
   }));
 }
+var init_routeMatching = __esm({
+  "node_modules/@remix-run/server-runtime/esm/routeMatching.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/mode.js
 function isServerMode(value) {
   return value === ServerMode.Development || value === ServerMode.Production || value === ServerMode.Test;
 }
+var ServerMode;
+var init_mode = __esm({
+  "node_modules/@remix-run/server-runtime/esm/mode.js"() {
+    (function(ServerMode2) {
+      ServerMode2["Development"] = "development";
+      ServerMode2["Production"] = "production";
+      ServerMode2["Test"] = "test";
+    })(ServerMode || (ServerMode = {}));
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/routes.js
 function createRoutes(manifest, parentId) {
   return Object.keys(manifest).filter((key) => manifest[key].parentId === parentId).map((id) => ({
     ...manifest[id],
     children: createRoutes(manifest, id)
   }));
 }
-async function createRouteData(matches, responses) {
-  let data = await Promise.all(responses.map(extractData));
-  return matches.reduce((memo, match, index) => {
-    memo[match.route.id] = data[index];
-    return memo;
-  }, {});
-}
-async function createActionData(response) {
-  return extractData(response);
-}
+var init_routes = __esm({
+  "node_modules/@remix-run/server-runtime/esm/routes.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/serverHandoff.js
+import jsesc from "https://esm.sh/jsesc@3.0.2?no-check";
 function createServerHandoffString(serverHandoff) {
   return jsesc(serverHandoff, {
     isScriptContext: true
   });
 }
-function getRequestType(request, matches) {
-  if (isDataRequest(request)) {
+var init_serverHandoff = __esm({
+  "node_modules/@remix-run/server-runtime/esm/serverHandoff.js"() {
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/server.js
+function createRequestHandler(build, platform, mode) {
+  let routes3 = createRoutes(build.routes);
+  let serverMode = isServerMode(mode) ? mode : ServerMode.Production;
+  return async function requestHandler(request, loadContext) {
+    let url2 = new URL(request.url);
+    let matches = matchServerRoutes(routes3, url2.pathname);
+    let requestType = getRequestType(url2, matches);
+    let response;
+    switch (requestType) {
+      case "data":
+        response = await handleDataRequest({
+          request,
+          loadContext,
+          matches,
+          handleDataRequest: build.entry.module.handleDataRequest,
+          serverMode
+        });
+        break;
+      case "document":
+        response = await renderDocumentRequest({
+          build,
+          loadContext,
+          matches,
+          request,
+          routes: routes3,
+          serverMode
+        });
+        break;
+      case "resource":
+        response = await handleResourceRequest({
+          request,
+          loadContext,
+          matches,
+          serverMode
+        });
+        break;
+    }
+    if (request.method.toLowerCase() === "head") {
+      return new Response(null, {
+        headers: response.headers,
+        status: response.status,
+        statusText: response.statusText
+      });
+    }
+    return response;
+  };
+}
+async function handleDataRequest({
+  handleDataRequest: handleDataRequest2,
+  loadContext,
+  matches,
+  request,
+  serverMode
+}) {
+  if (!isValidRequestMethod(request)) {
+    return errorBoundaryError(new Error(`Invalid request method "${request.method}"`), 405);
+  }
+  let url2 = new URL(request.url);
+  if (!matches) {
+    return errorBoundaryError(new Error(`No route matches URL "${url2.pathname}"`), 404);
+  }
+  let response;
+  let match;
+  try {
+    if (isActionRequest(request)) {
+      match = getActionRequestMatch(url2, matches);
+      response = await callRouteAction({
+        loadContext,
+        match,
+        request
+      });
+    } else {
+      let routeId = url2.searchParams.get("_data");
+      if (!routeId) {
+        return errorBoundaryError(new Error(`Missing route id in ?_data`), 403);
+      }
+      let tempMatch = matches.find((match2) => match2.route.id === routeId);
+      if (!tempMatch) {
+        return errorBoundaryError(new Error(`Route "${routeId}" does not match URL "${url2.pathname}"`), 403);
+      }
+      match = tempMatch;
+      response = await callRouteLoader({
+        loadContext,
+        match,
+        request
+      });
+    }
+    if (isRedirectResponse(response)) {
+      let headers = new Headers(response.headers);
+      headers.set("X-Remix-Redirect", headers.get("Location"));
+      headers.delete("Location");
+      return new Response(null, {
+        status: 204,
+        headers
+      });
+    }
+    if (handleDataRequest2) {
+      response = await handleDataRequest2(response.clone(), {
+        context: loadContext,
+        params: match.params,
+        request: request.clone()
+      });
+    }
+    return response;
+  } catch (error) {
+    if (serverMode !== ServerMode.Test) {
+      console.error(error);
+    }
+    if (serverMode === ServerMode.Development) {
+      return errorBoundaryError(error, 500);
+    }
+    return errorBoundaryError(new Error("Unexpected Server Error"), 500);
+  }
+}
+async function renderDocumentRequest({
+  build,
+  loadContext,
+  matches,
+  request,
+  routes: routes3,
+  serverMode
+}) {
+  let url2 = new URL(request.url);
+  let appState = {
+    trackBoundaries: true,
+    trackCatchBoundaries: true,
+    catchBoundaryRouteId: null,
+    renderBoundaryRouteId: null,
+    loaderBoundaryRouteId: null,
+    error: void 0,
+    catch: void 0
+  };
+  if (!isValidRequestMethod(request)) {
+    matches = null;
+    appState.trackCatchBoundaries = false;
+    appState.catch = {
+      data: null,
+      status: 405,
+      statusText: "Method Not Allowed"
+    };
+  } else if (!matches) {
+    appState.trackCatchBoundaries = false;
+    appState.catch = {
+      data: null,
+      status: 404,
+      statusText: "Not Found"
+    };
+  }
+  let actionStatus;
+  let actionData;
+  let actionMatch;
+  let actionResponse;
+  if (matches && isActionRequest(request)) {
+    actionMatch = getActionRequestMatch(url2, matches);
+    try {
+      actionResponse = await callRouteAction({
+        loadContext,
+        match: actionMatch,
+        request
+      });
+      if (isRedirectResponse(actionResponse)) {
+        return actionResponse;
+      }
+      actionStatus = {
+        status: actionResponse.status,
+        statusText: actionResponse.statusText
+      };
+      if (isCatchResponse(actionResponse)) {
+        appState.catchBoundaryRouteId = getDeepestRouteIdWithBoundary(matches, "CatchBoundary");
+        appState.trackCatchBoundaries = false;
+        appState.catch = {
+          ...actionStatus,
+          data: await extractData(actionResponse)
+        };
+      } else {
+        actionData = {
+          [actionMatch.route.id]: await extractData(actionResponse)
+        };
+      }
+    } catch (error) {
+      appState.loaderBoundaryRouteId = getDeepestRouteIdWithBoundary(matches, "ErrorBoundary");
+      appState.trackBoundaries = false;
+      appState.error = await serializeError(error);
+      if (serverMode !== ServerMode.Test) {
+        console.error(`There was an error running the action for route ${actionMatch.route.id}`);
+      }
+    }
+  }
+  let routeModules = createEntryRouteModules(build.routes);
+  let matchesToLoad = matches || [];
+  if (appState.catch) {
+    matchesToLoad = getMatchesUpToDeepestBoundary(matchesToLoad.slice(0, -1), "CatchBoundary");
+  } else if (appState.error) {
+    matchesToLoad = getMatchesUpToDeepestBoundary(matchesToLoad.slice(0, -1), "ErrorBoundary");
+  }
+  let routeLoaderResults = await Promise.allSettled(matchesToLoad.map((match) => match.route.module.loader ? callRouteLoader({
+    loadContext,
+    match,
+    request
+  }) : Promise.resolve(void 0)));
+  let actionCatch = appState.catch;
+  let actionError = appState.error;
+  let actionCatchBoundaryRouteId = appState.catchBoundaryRouteId;
+  let actionLoaderBoundaryRouteId = appState.loaderBoundaryRouteId;
+  appState.catch = void 0;
+  appState.error = void 0;
+  let routeLoaderResponses = [];
+  let loaderStatusCodes = [];
+  let routeData = {};
+  for (let index = 0; index < matchesToLoad.length; index++) {
+    let match = matchesToLoad[index];
+    let result = routeLoaderResults[index];
+    let error = result.status === "rejected" ? result.reason : void 0;
+    let response = result.status === "fulfilled" ? result.value : void 0;
+    let isRedirect = response ? isRedirectResponse(response) : false;
+    let isCatch = response ? isCatchResponse(response) : false;
+    if (appState.catch || appState.error) {
+      break;
+    }
+    if (!actionCatch && !actionError && response && isRedirect) {
+      return response;
+    }
+    if (match.route.module.CatchBoundary) {
+      appState.catchBoundaryRouteId = match.route.id;
+    }
+    if (match.route.module.ErrorBoundary) {
+      appState.loaderBoundaryRouteId = match.route.id;
+    }
+    if (error) {
+      loaderStatusCodes.push(500);
+      appState.trackBoundaries = false;
+      appState.error = await serializeError(error);
+      if (serverMode !== ServerMode.Test) {
+        console.error(`There was an error running the data loader for route ${match.route.id}`);
+      }
+      break;
+    } else if (response) {
+      routeLoaderResponses.push(response);
+      loaderStatusCodes.push(response.status);
+      if (isCatch) {
+        appState.trackCatchBoundaries = false;
+        appState.catch = {
+          data: await extractData(response),
+          status: response.status,
+          statusText: response.statusText
+        };
+        break;
+      } else {
+        routeData[match.route.id] = await extractData(response);
+      }
+    }
+  }
+  if (!appState.catch) {
+    appState.catchBoundaryRouteId = actionCatchBoundaryRouteId;
+  }
+  if (!appState.error) {
+    appState.loaderBoundaryRouteId = actionLoaderBoundaryRouteId;
+  }
+  appState.catch = actionCatch || appState.catch;
+  appState.error = actionError || appState.error;
+  let renderableMatches = getRenderableMatches(matches, appState);
+  if (!renderableMatches) {
+    renderableMatches = [];
+    let root = routes3[0];
+    if (root && root.module.CatchBoundary) {
+      appState.catchBoundaryRouteId = "root";
+      renderableMatches.push({
+        params: {},
+        pathname: "",
+        route: routes3[0]
+      });
+    }
+  }
+  let notOkResponse = actionStatus && actionStatus.status !== 200 ? actionStatus.status : loaderStatusCodes.find((status) => status !== 200);
+  let responseStatusCode = appState.error ? 500 : typeof notOkResponse === "number" ? notOkResponse : appState.catch ? appState.catch.status : 200;
+  let responseHeaders = getDocumentHeaders(build, renderableMatches, routeLoaderResponses, actionResponse);
+  let entryMatches = createEntryMatches(renderableMatches, build.assets.routes);
+  let serverHandoff = {
+    actionData,
+    appState,
+    matches: entryMatches,
+    routeData
+  };
+  let entryContext = {
+    ...serverHandoff,
+    manifest: build.assets,
+    routeModules,
+    serverHandoffString: createServerHandoffString(serverHandoff)
+  };
+  let handleDocumentRequest = build.entry.module.default;
+  try {
+    return await handleDocumentRequest(request.clone(), responseStatusCode, responseHeaders, entryContext);
+  } catch (error) {
+    responseStatusCode = 500;
+    appState.trackBoundaries = false;
+    appState.error = await serializeError(error);
+    entryContext.serverHandoffString = createServerHandoffString(serverHandoff);
+    try {
+      return await handleDocumentRequest(request.clone(), responseStatusCode, responseHeaders, entryContext);
+    } catch (error2) {
+      if (serverMode !== ServerMode.Test) {
+        console.error(error2);
+      }
+      let message = "Unexpected Server Error";
+      if (serverMode === ServerMode.Development) {
+        message += `
+
+${String(error2)}`;
+      }
+      return new Response(message, {
+        status: 500,
+        headers: {
+          "Content-Type": "text/plain"
+        }
+      });
+    }
+  }
+}
+async function handleResourceRequest({
+  loadContext,
+  matches,
+  request,
+  serverMode
+}) {
+  let match = matches.slice(-1)[0];
+  try {
+    if (isActionRequest(request)) {
+      return await callRouteAction({
+        match,
+        loadContext,
+        request
+      });
+    } else {
+      return await callRouteLoader({
+        match,
+        loadContext,
+        request
+      });
+    }
+  } catch (error) {
+    if (serverMode !== ServerMode.Test) {
+      console.error(error);
+    }
+    let message = "Unexpected Server Error";
+    if (serverMode === ServerMode.Development) {
+      message += `
+
+${String(error)}`;
+    }
+    return new Response(message, {
+      status: 500,
+      headers: {
+        "Content-Type": "text/plain"
+      }
+    });
+  }
+}
+function getRequestType(url2, matches) {
+  if (url2.searchParams.has("_data")) {
     return "data";
   }
   if (!matches) {
@@ -205,298 +642,23 @@ function getRequestType(request, matches) {
   }
   return "document";
 }
-function createRequestHandler(build, platform, mode) {
-  let routes3 = createRoutes(build.routes);
-  let serverMode = isServerMode(mode) ? mode : ServerMode.Production;
-  return async (request, loadContext = {}) => {
-    let url2 = new URL(request.url);
-    let matches = matchServerRoutes(routes3, url2.pathname);
-    let requestType = getRequestType(request, matches);
-    let response;
-    switch (requestType) {
-      case "data":
-        response = await handleDataRequest(request, loadContext, build, platform, matches);
-        break;
-      case "document":
-        response = await handleDocumentRequest(request, loadContext, build, platform, routes3, serverMode);
-        break;
-      case "resource":
-        response = await handleResourceRequest(request, loadContext, build, platform, matches);
-        break;
-    }
-    if (isHeadRequest(request)) {
-      return new Response(null, {
-        headers: response.headers,
-        status: response.status,
-        statusText: response.statusText
-      });
-    }
-    return response;
-  };
-}
-async function handleResourceRequest(request, loadContext, build, platform, matches) {
-  let url2 = new URL(request.url);
-  if (!matches) {
-    return jsonError(`No route matches URL "${url2.pathname}"`, 404);
-  }
-  let routeMatch = matches.slice(-1)[0];
-  try {
-    return isActionRequest(request) ? await callRouteAction(build, routeMatch.route.id, request, loadContext, routeMatch.params) : await loadRouteData(build, routeMatch.route.id, request, loadContext, routeMatch.params);
-  } catch (error) {
-    var _platform$formatServe;
-    let formattedError = await ((_platform$formatServe = platform.formatServerError) === null || _platform$formatServe === void 0 ? void 0 : _platform$formatServe.call(platform, error)) || error;
-    throw formattedError;
-  }
-}
-async function handleDataRequest(request, loadContext, build, platform, matches) {
-  if (!isValidRequestMethod(request)) {
-    return jsonError(`Invalid request method "${request.method}"`, 405);
-  }
-  let url2 = new URL(request.url);
-  if (!matches) {
-    return jsonError(`No route matches URL "${url2.pathname}"`, 404);
-  }
-  let routeMatch;
-  if (isActionRequest(request)) {
-    routeMatch = matches[matches.length - 1];
-    if (!isIndexRequestUrl(url2) && matches[matches.length - 1].route.id.endsWith("/index")) {
-      routeMatch = matches[matches.length - 2];
-    }
-  } else {
-    let routeId = url2.searchParams.get("_data");
-    if (!routeId) {
-      return jsonError(`Missing route id in ?_data`, 403);
-    }
-    let match = matches.find((match2) => match2.route.id === routeId);
-    if (!match) {
-      return jsonError(`Route "${routeId}" does not match URL "${url2.pathname}"`, 403);
-    }
-    routeMatch = match;
-  }
-  let response;
-  try {
-    response = isActionRequest(request) ? await callRouteAction(build, routeMatch.route.id, stripIndexParam(stripDataParam(request.clone())), loadContext, routeMatch.params) : await loadRouteData(build, routeMatch.route.id, stripIndexParam(stripDataParam(request.clone())), loadContext, routeMatch.params);
-  } catch (error) {
-    var _platform$formatServe2;
-    let formattedError = await ((_platform$formatServe2 = platform.formatServerError) === null || _platform$formatServe2 === void 0 ? void 0 : _platform$formatServe2.call(platform, error)) || error;
-    response = json(await serializeError(formattedError), {
-      status: 500,
-      headers: {
-        "X-Remix-Error": "unfortunately, yes"
-      }
-    });
-  }
-  if (isRedirectResponse(response)) {
-    let headers = new Headers(response.headers);
-    headers.set("X-Remix-Redirect", headers.get("Location"));
-    headers.delete("Location");
-    return new Response(null, {
-      status: 204,
-      headers
-    });
-  }
-  if (build.entry.module.handleDataRequest) {
-    return build.entry.module.handleDataRequest(response, {
-      request: request.clone(),
-      context: loadContext,
-      params: routeMatch.params
-    });
-  }
-  return response;
-}
-async function handleDocumentRequest(request, loadContext, build, platform, routes3, serverMode) {
-  let url2 = new URL(request.url);
-  let requestState = isValidRequestMethod(request) ? "ok" : "invalid-request";
-  let matches = requestState === "ok" ? matchServerRoutes(routes3, url2.pathname) : null;
-  if (!matches) {
-    if (requestState === "ok") {
-      requestState = "no-match";
-    }
-    matches = [{
-      params: {},
-      pathname: "",
-      route: routes3[0]
-    }];
-  }
-  let componentDidCatchEmulator = {
-    trackBoundaries: true,
-    trackCatchBoundaries: true,
-    catchBoundaryRouteId: null,
-    renderBoundaryRouteId: null,
-    loaderBoundaryRouteId: null,
-    error: void 0,
-    catch: void 0
-  };
-  let responseState = "ok";
-  let actionResponse;
-  let actionRouteId;
-  if (requestState !== "ok") {
-    responseState = "caught";
-    componentDidCatchEmulator.trackCatchBoundaries = false;
-    let withBoundaries = getMatchesUpToDeepestBoundary(matches, "CatchBoundary");
-    componentDidCatchEmulator.catchBoundaryRouteId = withBoundaries.length > 0 ? withBoundaries[withBoundaries.length - 1].route.id : null;
-    componentDidCatchEmulator.catch = {
-      status: requestState === "no-match" ? 404 : 405,
-      statusText: requestState === "no-match" ? "Not Found" : "Method Not Allowed",
-      data: null
-    };
-  } else if (isActionRequest(request)) {
-    let actionMatch = matches[matches.length - 1];
-    if (!isIndexRequestUrl(url2) && actionMatch.route.id.endsWith("/index")) {
-      actionMatch = matches[matches.length - 2];
-    }
-    actionRouteId = actionMatch.route.id;
-    try {
-      actionResponse = await callRouteAction(build, actionMatch.route.id, stripIndexParam(stripDataParam(request.clone())), loadContext, actionMatch.params);
-      if (isRedirectResponse(actionResponse)) {
-        return actionResponse;
-      }
-    } catch (error) {
-      var _platform$formatServe3;
-      let formattedError = await ((_platform$formatServe3 = platform.formatServerError) === null || _platform$formatServe3 === void 0 ? void 0 : _platform$formatServe3.call(platform, error)) || error;
-      responseState = "error";
-      let withBoundaries = getMatchesUpToDeepestBoundary(matches, "ErrorBoundary");
-      componentDidCatchEmulator.loaderBoundaryRouteId = withBoundaries[withBoundaries.length - 1].route.id;
-      componentDidCatchEmulator.error = await serializeError(formattedError);
-    }
-  }
-  if (actionResponse && isCatchResponse(actionResponse)) {
-    responseState = "caught";
-    let withBoundaries = getMatchesUpToDeepestBoundary(matches, "CatchBoundary");
-    componentDidCatchEmulator.trackCatchBoundaries = false;
-    componentDidCatchEmulator.catchBoundaryRouteId = withBoundaries[withBoundaries.length - 1].route.id;
-    componentDidCatchEmulator.catch = {
-      status: actionResponse.status,
-      statusText: actionResponse.statusText,
-      data: await extractData(actionResponse.clone())
-    };
-  }
-  let matchesToLoad = requestState !== "ok" ? [] : matches;
-  switch (responseState) {
-    case "caught":
-      matchesToLoad = getMatchesUpToDeepestBoundary(matches.slice(0, -1), "CatchBoundary");
-      break;
-    case "error":
-      matchesToLoad = getMatchesUpToDeepestBoundary(matches.slice(0, -1), "ErrorBoundary");
-      break;
-  }
-  let routeLoaderPromises = matchesToLoad.map((match) => loadRouteData(build, match.route.id, stripIndexParam(stripDataParam(request.clone())), loadContext, match.params).catch((error) => error));
-  let routeLoaderResults = await Promise.all(routeLoaderPromises);
-  for (let [index, response2] of routeLoaderResults.entries()) {
-    let route = matches[index].route;
-    let routeModule = build.routes[route.id].module;
-    if (responseState === "error" && (response2 instanceof Error || isRedirectResponse(response2)) || responseState === "caught" && isCatchResponse(response2)) {
-      break;
-    }
-    if (componentDidCatchEmulator.catch || componentDidCatchEmulator.error) {
-      continue;
-    }
-    if (routeModule.CatchBoundary) {
-      componentDidCatchEmulator.catchBoundaryRouteId = route.id;
-    }
-    if (routeModule.ErrorBoundary) {
-      componentDidCatchEmulator.loaderBoundaryRouteId = route.id;
-    }
-    if (response2 instanceof Error) {
-      var _platform$formatServe4;
-      if (serverMode !== ServerMode.Test) {
-        console.error(`There was an error running the data loader for route ${route.id}`);
-      }
-      let formattedError = await ((_platform$formatServe4 = platform.formatServerError) === null || _platform$formatServe4 === void 0 ? void 0 : _platform$formatServe4.call(platform, response2)) || response2;
-      componentDidCatchEmulator.error = await serializeError(formattedError);
-      routeLoaderResults[index] = json(null, {
-        status: 500
-      });
-    } else if (isRedirectResponse(response2)) {
-      return response2;
-    } else if (isCatchResponse(response2)) {
-      componentDidCatchEmulator.trackCatchBoundaries = false;
-      componentDidCatchEmulator.catch = {
-        status: response2.status,
-        statusText: response2.statusText,
-        data: await extractData(response2.clone())
-      };
-      routeLoaderResults[index] = json(null, {
-        status: response2.status
-      });
-    }
-  }
-  let routeLoaderResponses = routeLoaderResults;
-  let notOkResponse = [actionResponse, ...routeLoaderResponses].find((response2) => response2 && response2.status !== 200);
-  let statusCode = requestState === "no-match" ? 404 : requestState === "invalid-request" ? 405 : responseState === "error" ? 500 : notOkResponse ? notOkResponse.status : 200;
-  let renderableMatches = getRenderableMatches(matches, componentDidCatchEmulator);
-  let serverEntryModule = build.entry.module;
-  let headers = getDocumentHeaders(build, renderableMatches, routeLoaderResponses, actionResponse);
-  let entryMatches = createEntryMatches(renderableMatches, build.assets.routes);
-  let routeData = await createRouteData(renderableMatches, routeLoaderResponses);
-  let actionData = actionResponse && actionRouteId ? {
-    [actionRouteId]: await createActionData(actionResponse.clone())
-  } : void 0;
-  let routeModules = createEntryRouteModules(build.routes);
-  let serverHandoff = {
-    matches: entryMatches,
-    componentDidCatchEmulator,
-    routeData,
-    actionData
-  };
-  let entryContext = {
-    ...serverHandoff,
-    manifest: build.assets,
-    routeModules,
-    serverHandoffString: createServerHandoffString(serverHandoff)
-  };
-  let response;
-  try {
-    response = await serverEntryModule.default(request, statusCode, headers, entryContext);
-  } catch (error) {
-    var _platform$formatServe5;
-    let formattedError = await ((_platform$formatServe5 = platform.formatServerError) === null || _platform$formatServe5 === void 0 ? void 0 : _platform$formatServe5.call(platform, error)) || error;
-    if (serverMode !== ServerMode.Test) {
-      console.error(formattedError);
-    }
-    statusCode = 500;
-    componentDidCatchEmulator.trackBoundaries = false;
-    componentDidCatchEmulator.error = await serializeError(formattedError);
-    entryContext.serverHandoffString = createServerHandoffString(serverHandoff);
-    try {
-      response = await serverEntryModule.default(request, statusCode, headers, entryContext);
-    } catch (error2) {
-      var _platform$formatServe6;
-      let formattedError2 = await ((_platform$formatServe6 = platform.formatServerError) === null || _platform$formatServe6 === void 0 ? void 0 : _platform$formatServe6.call(platform, error2)) || error2;
-      if (serverMode !== ServerMode.Test) {
-        console.error(formattedError2);
-      }
-      response = new Response(`Unexpected Server Error
-
-${formattedError2.message}`, {
-        status: 500,
-        headers: {
-          "Content-Type": "text/plain"
-        }
-      });
-    }
-  }
-  return response;
-}
-function jsonError(error, status = 403) {
-  return json({
-    error
-  }, {
-    status
-  });
-}
 function isActionRequest(request) {
   let method = request.method.toLowerCase();
   return method === "post" || method === "put" || method === "patch" || method === "delete";
 }
-function isValidRequestMethod(request) {
-  return request.method.toLowerCase() === "get" || isHeadRequest(request) || isActionRequest(request);
-}
 function isHeadRequest(request) {
   return request.method.toLowerCase() === "head";
 }
-function isDataRequest(request) {
-  return new URL(request.url).searchParams.has("_data");
+function isValidRequestMethod(request) {
+  return request.method.toLowerCase() === "get" || isHeadRequest(request) || isActionRequest(request);
+}
+async function errorBoundaryError(error, status) {
+  return json(await serializeError(error), {
+    status,
+    headers: {
+      "X-Remix-Error": "yes"
+    }
+  });
 }
 function isIndexRequestUrl(url2) {
   let indexRequest = false;
@@ -507,25 +669,16 @@ function isIndexRequestUrl(url2) {
   }
   return indexRequest;
 }
-function stripIndexParam(request) {
-  let url2 = new URL(request.url);
-  let indexValues = url2.searchParams.getAll("index");
-  url2.searchParams.delete("index");
-  let indexValuesToKeep = [];
-  for (let indexValue of indexValues) {
-    if (indexValue) {
-      indexValuesToKeep.push(indexValue);
-    }
+function getActionRequestMatch(url2, matches) {
+  let match = matches.slice(-1)[0];
+  if (!isIndexRequestUrl(url2) && match.route.id.endsWith("/index")) {
+    return matches.slice(-2)[0];
   }
-  for (let toKeep of indexValuesToKeep) {
-    url2.searchParams.append("index", toKeep);
-  }
-  return new Request(url2.toString(), request);
+  return match;
 }
-function stripDataParam(request) {
-  let url2 = new URL(request.url);
-  url2.searchParams.delete("_data");
-  return new Request(url2.toString(), request);
+function getDeepestRouteIdWithBoundary(matches, key) {
+  let matched = getMatchesUpToDeepestBoundary(matches, key).slice(-1)[0];
+  return matched ? matched.route.id : null;
 }
 function getMatchesUpToDeepestBoundary(matches, key) {
   let deepestBoundaryIndex = -1;
@@ -539,33 +692,46 @@ function getMatchesUpToDeepestBoundary(matches, key) {
   }
   return matches.slice(0, deepestBoundaryIndex + 1);
 }
-function getRenderableMatches(matches, componentDidCatchEmulator) {
-  if (!componentDidCatchEmulator.catch && !componentDidCatchEmulator.error) {
+function getRenderableMatches(matches, appState) {
+  if (!matches) {
+    return null;
+  }
+  if (!appState.catch && !appState.error) {
     return matches;
   }
   let lastRenderableIndex = -1;
   matches.forEach((match, index) => {
     let id = match.route.id;
-    if (componentDidCatchEmulator.renderBoundaryRouteId === id || componentDidCatchEmulator.loaderBoundaryRouteId === id || componentDidCatchEmulator.catchBoundaryRouteId === id) {
+    if (appState.renderBoundaryRouteId === id || appState.loaderBoundaryRouteId === id || appState.catchBoundaryRouteId === id) {
       lastRenderableIndex = index;
     }
   });
   return matches.slice(0, lastRenderableIndex + 1);
 }
-var redirectStatusCodes, ServerMode;
-var init_browser = __esm({
-  "node_modules/@remix-run/server-runtime/browser/index.js"() {
-    redirectStatusCodes = new Set([301, 302, 303, 307, 308]);
-    (function(ServerMode2) {
-      ServerMode2["Development"] = "development";
-      ServerMode2["Production"] = "production";
-      ServerMode2["Test"] = "test";
-    })(ServerMode || (ServerMode = {}));
+var init_server = __esm({
+  "node_modules/@remix-run/server-runtime/esm/server.js"() {
+    init_data();
+    init_entry();
+    init_errors();
+    init_headers();
+    init_routeMatching();
+    init_mode();
+    init_routes();
+    init_responses();
+    init_serverHandoff();
+  }
+});
+
+// node_modules/@remix-run/server-runtime/esm/index.js
+var init_esm = __esm({
+  "node_modules/@remix-run/server-runtime/esm/index.js"() {
+    init_responses();
+    init_server();
   }
 });
 
 // deno/entry.ts
-init_browser();
+init_esm();
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
 import mime from "https://esm.sh/mime@3.0.0?no-check";
 
@@ -582,7 +748,7 @@ import {
 } from "https://esm.sh/react@17.0.2?no-check";
 import { renderToString } from "https://esm.sh/react-dom@17.0.2/server?no-check";
 
-// node_modules/@remix-run/react/browser/_virtual/_rollupPluginBabelHelpers.js
+// node_modules/@remix-run/react/esm/_virtual/_rollupPluginBabelHelpers.js
 function _extends() {
   _extends = Object.assign || function(target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -598,11 +764,11 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
-// node_modules/@remix-run/react/browser/components.js
+// node_modules/@remix-run/react/esm/components.js
 import React__default3 from "https://esm.sh/react@17.0.2?no-check";
-import { useHref, NavLink as NavLink$1, Link as Link$1, useLocation, useResolvedPath, useNavigate, Router, useRoutes } from "https://esm.sh/react-router-dom@6.0.2?no-check";
+import { useHref, NavLink as NavLink$1, Link as Link$1, useLocation, useResolvedPath, useNavigate, Router, useRoutes } from "https://esm.sh/react-router-dom@6.1.0?no-check";
 
-// node_modules/@remix-run/react/browser/errorBoundaries.js
+// node_modules/@remix-run/react/esm/errorBoundaries.js
 import React__default, { useContext } from "https://esm.sh/react@17.0.2?no-check";
 var RemixErrorBoundary = class extends React__default.Component {
   constructor(props) {
@@ -624,7 +790,10 @@ var RemixErrorBoundary = class extends React__default.Component {
         location: props.location
       };
     }
-    return state;
+    return {
+      error: props.error || state.error,
+      location: state.location
+    };
   }
   render() {
     if (this.state.error) {
@@ -695,17 +864,17 @@ function RemixRootDefaultCatchBoundary() {
   }, "Throwing Responses in Remix"), ".")))));
 }
 
-// node_modules/@remix-run/react/browser/invariant.js
+// node_modules/@remix-run/react/esm/invariant.js
 function invariant(value, message) {
   if (value === false || value === null || typeof value === "undefined") {
     throw new Error(message);
   }
 }
 
-// node_modules/@remix-run/react/browser/links.js
+// node_modules/@remix-run/react/esm/links.js
 import { parsePath } from "https://esm.sh/history@5.1.0?no-check";
 
-// node_modules/@remix-run/react/browser/routeModules.js
+// node_modules/@remix-run/react/esm/routeModules.js
 async function loadRouteModule(route, routeModulesCache) {
   if (route.id in routeModulesCache) {
     return routeModulesCache[route.id];
@@ -721,7 +890,7 @@ async function loadRouteModule(route, routeModulesCache) {
   }
 }
 
-// node_modules/@remix-run/react/browser/links.js
+// node_modules/@remix-run/react/esm/links.js
 function getLinksForMatches(matches, routeModules, manifest) {
   let descriptors = matches.map((match) => {
     let module = routeModules[match.route.id];
@@ -780,14 +949,22 @@ async function getStylesheetPrefetchLinks(matches, routeModules) {
     let mod = await loadRouteModule(match.route, routeModules);
     return mod.links ? mod.links() : [];
   }));
-  return links3.flat(1).filter(isHtmlLinkDescriptor).filter((link) => link.rel === "stylesheet").map(({
+  return links3.flat(1).filter(isHtmlLinkDescriptor).filter((link) => link.rel === "stylesheet" || link.rel === "preload").map(({
     rel,
     ...attrs
-  }) => ({
-    rel: "prefetch",
-    as: "style",
-    ...attrs
-  }));
+  }) => {
+    if (rel === "preload") {
+      return {
+        rel: "prefetch",
+        ...attrs
+      };
+    }
+    return {
+      rel: "prefetch",
+      as: "style",
+      ...attrs
+    };
+  });
 }
 function getNewMatchesForLinks(page, nextMatches, currentMatches, location, mode) {
   let path = parsePathPatch(page);
@@ -878,17 +1055,17 @@ function parsePathPatch(href) {
   return path;
 }
 
-// node_modules/@remix-run/react/browser/markup.js
+// node_modules/@remix-run/react/esm/markup.js
 function createHtml(html) {
   return {
     __html: html
   };
 }
 
-// node_modules/@remix-run/react/browser/routes.js
+// node_modules/@remix-run/react/esm/routes.js
 import React__default2 from "https://esm.sh/react@17.0.2?no-check";
 
-// node_modules/@remix-run/react/browser/data.js
+// node_modules/@remix-run/react/esm/data.js
 function isCatchResponse2(response) {
   return response instanceof Response && response.headers.get("X-Remix-Catch") != null;
 }
@@ -927,30 +1104,32 @@ function getActionInit(submission, signal) {
     method,
     formData
   } = submission;
-  if (encType !== "application/x-www-form-urlencoded") {
-    throw new Error(`Only "application/x-www-form-urlencoded" forms are supported right now.`);
-  }
-  let body = new URLSearchParams();
-  for (let [key, value] of formData) {
-    invariant(typeof value === "string", "File inputs are not supported right now");
-    body.append(key, value);
+  let headers = void 0;
+  let body = formData;
+  if (encType === "application/x-www-form-urlencoded") {
+    body = new URLSearchParams();
+    for (let [key, value] of formData) {
+      invariant(typeof value === "string", `File inputs are not supported with encType "application/x-www-form-urlencoded", please use "multipart/form-data" instead.`);
+      body.append(key, value);
+    }
+    headers = {
+      "Content-Type": encType
+    };
   }
   return {
     method,
-    body: body.toString(),
+    body,
     signal,
     credentials: "same-origin",
-    headers: {
-      "Content-Type": encType
-    }
+    headers
   };
 }
 
-// node_modules/@remix-run/react/browser/transition.js
+// node_modules/@remix-run/react/esm/transition.js
 import { Action } from "https://esm.sh/history@5.1.0?no-check";
 
-// node_modules/@remix-run/react/browser/routeMatching.js
-import { matchRoutes as matchRoutes2 } from "https://esm.sh/react-router-dom@6.0.2?no-check";
+// node_modules/@remix-run/react/esm/routeMatching.js
+import { matchRoutes as matchRoutes2 } from "https://esm.sh/react-router-dom@6.1.0?no-check";
 function matchClientRoutes(routes3, location) {
   let matches = matchRoutes2(routes3, location);
   if (!matches)
@@ -962,7 +1141,7 @@ function matchClientRoutes(routes3, location) {
   }));
 }
 
-// node_modules/@remix-run/react/browser/transition.js
+// node_modules/@remix-run/react/esm/transition.js
 var CatchValue = class {
   constructor(status, statusText, data) {
     this.status = status;
@@ -1170,7 +1349,7 @@ function createTransitionManager(init) {
     fetchReloadIds.set(key, loadId);
     let matchesToLoad = state.nextMatches || state.matches;
     let hrefToLoad = createHref(state.transition.location || state.location);
-    let results = await callLoaders(state, createUrl(hrefToLoad), matchesToLoad, controller.signal, maybeActionErrorResult, maybeActionCatchResult, submission, loadFetcher);
+    let results = await callLoaders(state, createUrl(hrefToLoad), matchesToLoad, controller.signal, maybeActionErrorResult, maybeActionCatchResult, submission, match.route.id, loadFetcher);
     if (controller.signal.aborted) {
       return;
     }
@@ -1453,7 +1632,7 @@ function createTransitionManager(init) {
         [leafMatch.route.id]: result.value
       }
     });
-    await loadPageData(location, matches2, submission, result);
+    await loadPageData(location, matches2, submission, leafMatch.route.id, result);
   }
   async function handleLoaderSubmissionNavigation(location, submission, matches2) {
     abortNormalNavigation();
@@ -1569,13 +1748,13 @@ function createTransitionManager(init) {
   function isHashChangeOnly(location) {
     return createHref(state.location) === createHref(location) && state.location.hash !== location.hash;
   }
-  async function loadPageData(location, matches2, submission, actionResult) {
+  async function loadPageData(location, matches2, submission, submissionRouteId, actionResult) {
     let maybeActionErrorResult = actionResult && isErrorResult(actionResult) ? actionResult : void 0;
     let maybeActionCatchResult = actionResult && isCatchResult(actionResult) ? actionResult : void 0;
     let controller = new AbortController();
     pendingNavigationController = controller;
     navigationLoadId = ++incrementingLoadId;
-    let results = await callLoaders(state, createUrl(createHref(location)), matches2, controller.signal, maybeActionErrorResult, maybeActionCatchResult, submission);
+    let results = await callLoaders(state, createUrl(createHref(location)), matches2, controller.signal, maybeActionErrorResult, maybeActionCatchResult, submission, submissionRouteId);
     if (controller.signal.aborted) {
       return;
     }
@@ -1652,8 +1831,8 @@ function isIndexRequestAction(action2) {
   }
   return indexRequest;
 }
-async function callLoaders(state, url2, matches, signal, actionErrorResult, actionCatchResult, submission, fetcher) {
-  let matchesToLoad = filterMatchesToLoad(state, url2, matches, actionErrorResult, actionCatchResult, submission, fetcher);
+async function callLoaders(state, url2, matches, signal, actionErrorResult, actionCatchResult, submission, submissionRouteId, fetcher) {
+  let matchesToLoad = filterMatchesToLoad(state, url2, matches, actionErrorResult, actionCatchResult, submission, submissionRouteId, fetcher);
   return Promise.all(matchesToLoad.map((match) => callLoader(match, url2, signal)));
 }
 async function callLoader(match, url2, signal) {
@@ -1700,7 +1879,20 @@ async function callAction(submission, match, signal) {
     };
   }
 }
-function filterMatchesToLoad(state, url2, matches, actionErrorResult, actionCatchResult, submission, fetcher) {
+function filterMatchesToLoad(state, url2, matches, actionErrorResult, actionCatchResult, submission, submissionRouteId, fetcher) {
+  if (submissionRouteId && (actionCatchResult || actionErrorResult)) {
+    let foundProblematicRoute = false;
+    matches = matches.filter((match) => {
+      if (foundProblematicRoute) {
+        return false;
+      }
+      if (match.route.id === submissionRouteId) {
+        foundProblematicRoute = true;
+        return false;
+      }
+      return true;
+    });
+  }
   let isNew = (match, index) => {
     if (!state.matches[index])
       return true;
@@ -1856,7 +2048,7 @@ function createUrl(href) {
   return new URL(href, window.location.origin);
 }
 
-// node_modules/@remix-run/react/browser/routes.js
+// node_modules/@remix-run/react/esm/routes.js
 function createClientRoute(entryRoute, routeModulesCache, Component) {
   return {
     caseSensitive: !!entryRoute.caseSensitive,
@@ -1916,8 +2108,7 @@ function createLoader(route, routeModules) {
       if (isCatchResponse2(result)) {
         throw new CatchValue(result.status, result.statusText, await extractData2(result.clone()));
       }
-      let data = await extractData2(result);
-      return data;
+      return extractData2(result);
     } else {
       await loadRouteModuleWithBlockingLinks(route, routeModules);
     }
@@ -1936,12 +2127,12 @@ function createAction(route) {
     if (result instanceof Error) {
       throw result;
     }
-    if (isCatchResponse2(result)) {
-      throw new CatchValue(result.status, result.statusText, await extractData2(result.clone()));
-    }
     let redirect2 = await checkRedirect(result);
     if (redirect2)
       return redirect2;
+    if (isCatchResponse2(result)) {
+      throw new CatchValue(result.status, result.statusText, await extractData2(result.clone()));
+    }
     return extractData2(result);
   };
   return action2;
@@ -1960,7 +2151,7 @@ async function checkRedirect(response) {
   return null;
 }
 
-// node_modules/@remix-run/react/browser/components.js
+// node_modules/@remix-run/react/esm/components.js
 var RemixEntryContext = /* @__PURE__ */ React__default3.createContext(void 0);
 function useRemixEntryContext() {
   let context = React__default3.useContext(RemixEntryContext);
@@ -1980,7 +2171,7 @@ function RemixEntry({
     actionData: documentActionData,
     routeModules,
     serverHandoffString,
-    componentDidCatchEmulator: entryComponentDidCatchEmulator
+    appState: entryComponentDidCatchEmulator
   } = entryContext;
   let clientRoutes = React__default3.useMemo(() => createClientRoutes(manifest.routes, routeModules, RemixRoute), [manifest, routeModules]);
   let [clientState, setClientState] = React__default3.useState(entryComponentDidCatchEmulator);
@@ -2040,7 +2231,7 @@ function RemixEntry({
     value: {
       matches,
       manifest,
-      componentDidCatchEmulator: clientState,
+      appState: clientState,
       routeModules,
       serverHandoffString,
       clientRoutes,
@@ -2094,7 +2285,7 @@ function RemixRoute({
   let {
     routeData,
     routeModules,
-    componentDidCatchEmulator
+    appState
   } = useRemixEntryContext();
   let data = routeData[id];
   let {
@@ -2110,9 +2301,9 @@ function RemixRoute({
     id
   };
   if (CatchBoundary3) {
-    let maybeServerCaught = componentDidCatchEmulator.catch && componentDidCatchEmulator.catchBoundaryRouteId === id ? componentDidCatchEmulator.catch : void 0;
-    if (componentDidCatchEmulator.trackCatchBoundaries) {
-      componentDidCatchEmulator.catchBoundaryRouteId = id;
+    let maybeServerCaught = appState.catch && appState.catchBoundaryRouteId === id ? appState.catch : void 0;
+    if (appState.trackCatchBoundaries) {
+      appState.catchBoundaryRouteId = id;
     }
     context = maybeServerCaught ? {
       id,
@@ -2131,9 +2322,9 @@ function RemixRoute({
     }, element);
   }
   if (ErrorBoundary3) {
-    let maybeServerRenderError = componentDidCatchEmulator.error && (componentDidCatchEmulator.renderBoundaryRouteId === id || componentDidCatchEmulator.loaderBoundaryRouteId === id) ? deserializeError(componentDidCatchEmulator.error) : void 0;
-    if (componentDidCatchEmulator.trackBoundaries) {
-      componentDidCatchEmulator.renderBoundaryRouteId = id;
+    let maybeServerRenderError = appState.error && (appState.renderBoundaryRouteId === id || appState.loaderBoundaryRouteId === id) ? deserializeError(appState.error) : void 0;
+    if (appState.trackBoundaries) {
+      appState.renderBoundaryRouteId = id;
     }
     context = maybeServerRenderError ? {
       id,
@@ -2208,9 +2399,9 @@ var Link = /* @__PURE__ */ React__default3.forwardRef(({
   return /* @__PURE__ */ React__default3.createElement(React__default3.Fragment, null, /* @__PURE__ */ React__default3.createElement(Link$1, _extends({
     ref: forwardedRef,
     to
-  }, prefetchHandlers, props)), shouldPrefetch && /* @__PURE__ */ React__default3.createElement(PrefetchPageLinks, {
+  }, prefetchHandlers, props)), shouldPrefetch ? /* @__PURE__ */ React__default3.createElement(PrefetchPageLinks, {
     page: href
-  }));
+  }) : null);
 });
 function composeEventHandlers(theirHandler, ourHandler) {
   return (event) => {
@@ -2509,11 +2700,11 @@ function useSubmitImpl(key) {
         formData = new FormData();
         if (target instanceof URLSearchParams) {
           for (let [name, value] of target) {
-            formData.set(name, value);
+            formData.append(name, value);
           }
         } else if (target != null) {
           for (let name of Object.keys(target)) {
-            formData.set(name, target[name]);
+            formData.append(name, target[name]);
           }
         }
       }
@@ -2526,7 +2717,7 @@ function useSubmitImpl(key) {
     if (method.toLowerCase() === "get") {
       for (let [name, value] of formData) {
         if (typeof value === "string") {
-          url2.searchParams.set(name, value);
+          url2.searchParams.append(name, value);
         } else {
           throw new Error(`Cannot submit binary form data using GET`);
         }
@@ -2621,59 +2812,10 @@ function useComposedRefs(...refs) {
   }, refs);
 }
 
-// node_modules/@remix-run/react/browser/index.js
-import { Outlet, useHref as useHref2, useLocation as useLocation3, useNavigate as useNavigate2, useNavigationType, useOutlet, useParams, useResolvedPath as useResolvedPath2, useSearchParams } from "https://esm.sh/react-router-dom@6.0.2?no-check";
+// node_modules/@remix-run/react/esm/index.js
+import { Outlet, useHref as useHref2, useLocation as useLocation3, useNavigate as useNavigate2, useNavigationType, useOutlet, useOutletContext, useParams, useResolvedPath as useResolvedPath2, useSearchParams } from "https://esm.sh/react-router-dom@6.1.0?no-check";
 
-// node_modules/@remix-run/react/browser/server.js
-import { Action as Action2, createPath } from "https://esm.sh/history@5.1.0?no-check";
-import React__default4 from "https://esm.sh/react@17.0.2?no-check";
-function RemixServer({
-  context,
-  url: url2
-}) {
-  if (typeof url2 === "string") {
-    url2 = new URL(url2);
-  }
-  let location = {
-    pathname: url2.pathname,
-    search: url2.search,
-    hash: "",
-    state: null,
-    key: "default"
-  };
-  let staticNavigator = {
-    createHref(to) {
-      return typeof to === "string" ? to : createPath(to);
-    },
-    push(to) {
-      throw new Error(`You cannot use navigator.push() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${JSON.stringify(to)})\` somewhere in your app.`);
-    },
-    replace(to) {
-      throw new Error(`You cannot use navigator.replace() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${JSON.stringify(to)}, { replace: true })\` somewhere in your app.`);
-    },
-    go(delta) {
-      throw new Error(`You cannot use navigator.go() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${delta})\` somewhere in your app.`);
-    },
-    back() {
-      throw new Error(`You cannot use navigator.back() on the server because it is a stateless environment.`);
-    },
-    forward() {
-      throw new Error(`You cannot use navigator.forward() on the server because it is a stateless environment.`);
-    },
-    block() {
-      throw new Error(`You cannot use navigator.block() on the server because it is a stateless environment.`);
-    }
-  };
-  return /* @__PURE__ */ React__default4.createElement(RemixEntry, {
-    context,
-    action: Action2.Pop,
-    location,
-    navigator: staticNavigator,
-    static: true
-  });
-}
-
-// node_modules/@remix-run/react/browser/scroll-restoration.js
+// node_modules/@remix-run/react/esm/scroll-restoration.js
 import {
   createElement,
   useCallback,
@@ -2681,10 +2823,10 @@ import {
   useLayoutEffect,
   useRef
 } from "https://esm.sh/react@17.0.2?no-check";
-import { useLocation as useLocation2 } from "https://esm.sh/react-router-dom@6.0.2?no-check";
+import { useLocation as useLocation2 } from "https://esm.sh/react-router-dom@6.1.0?no-check";
 var STORAGE_KEY = "positions";
 var positions = {};
-if (typeof document !== "undefined") {
+if (typeof window !== "undefined") {
   let sessionPositions = sessionStorage.getItem(STORAGE_KEY);
   if (sessionPositions) {
     positions = JSON.parse(sessionPositions);
@@ -2737,7 +2879,7 @@ function useScrollRestoration() {
   useBeforeUnload(useCallback(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(positions));
   }, []));
-  if (typeof document !== "undefined") {
+  if (typeof window !== "undefined") {
     useLayoutEffect(() => {
       if (!hydrated) {
         hydrated = true;
@@ -2769,18 +2911,67 @@ function useScrollRestoration() {
   }, [transition]);
 }
 
-// node_modules/remix/browser/server.js
-init_browser();
+// node_modules/@remix-run/react/esm/server.js
+import { Action as Action2, createPath } from "https://esm.sh/history@5.1.0?no-check";
+import React__default4 from "https://esm.sh/react@17.0.2?no-check";
+function RemixServer({
+  context,
+  url: url2
+}) {
+  if (typeof url2 === "string") {
+    url2 = new URL(url2);
+  }
+  let location = {
+    pathname: url2.pathname,
+    search: url2.search,
+    hash: "",
+    state: null,
+    key: "default"
+  };
+  let staticNavigator = {
+    createHref(to) {
+      return typeof to === "string" ? to : createPath(to);
+    },
+    push(to) {
+      throw new Error(`You cannot use navigator.push() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${JSON.stringify(to)})\` somewhere in your app.`);
+    },
+    replace(to) {
+      throw new Error(`You cannot use navigator.replace() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${JSON.stringify(to)}, { replace: true })\` somewhere in your app.`);
+    },
+    go(delta) {
+      throw new Error(`You cannot use navigator.go() on the server because it is a stateless environment. This error was probably triggered when you did a \`navigate(${delta})\` somewhere in your app.`);
+    },
+    back() {
+      throw new Error(`You cannot use navigator.back() on the server because it is a stateless environment.`);
+    },
+    forward() {
+      throw new Error(`You cannot use navigator.forward() on the server because it is a stateless environment.`);
+    },
+    block() {
+      throw new Error(`You cannot use navigator.block() on the server because it is a stateless environment.`);
+    }
+  };
+  return /* @__PURE__ */ React__default4.createElement(RemixEntry, {
+    context,
+    action: Action2.Pop,
+    location,
+    navigator: staticNavigator,
+    static: true
+  });
+}
+
+// node_modules/remix/esm/server.js
+init_esm();
 
 // build/index.js
 import { useEffect as useEffect2, useRef as useRef2 } from "https://esm.sh/react@17.0.2?no-check";
 
 // build/assets.json
-var version = "9fa8cef1";
+var version = "ef00b86e";
 var entry = {
-  module: "/build/entry.client-JHHC3IDZ.js",
+  module: "/build/entry.client-KEM5NJM4.js",
   imports: [
-    "/build/_shared/chunk-42QCTZ7V.js",
+    "/build/_shared/chunk-3VKNKTAT.js",
     "/build/_shared/chunk-AKSB5QXU.js"
   ]
 };
@@ -2788,7 +2979,7 @@ var routes = {
   root: {
     id: "root",
     path: "",
-    module: "/build/root-DUJQ2WJ2.js",
+    module: "/build/root-5CIOO5T3.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: true,
@@ -2798,7 +2989,7 @@ var routes = {
     id: "routes/demos/about",
     parentId: "root",
     path: "demos/about",
-    module: "/build/routes/demos/about-BTC63KS4.js",
+    module: "/build/routes/demos/about-PB5QQA5A.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -2808,7 +2999,7 @@ var routes = {
     id: "routes/demos/about/index",
     parentId: "routes/demos/about",
     index: true,
-    module: "/build/routes/demos/about/index-BGWJGOYG.js",
+    module: "/build/routes/demos/about/index-6NHL2GX3.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -2818,7 +3009,7 @@ var routes = {
     id: "routes/demos/about/whoa",
     parentId: "routes/demos/about",
     path: "whoa",
-    module: "/build/routes/demos/about/whoa-DSRBPFJ7.js",
+    module: "/build/routes/demos/about/whoa-FTS4YHHM.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -2828,7 +3019,7 @@ var routes = {
     id: "routes/demos/actions",
     parentId: "root",
     path: "demos/actions",
-    module: "/build/routes/demos/actions-AY4GVC4A.js",
+    module: "/build/routes/demos/actions-K2NIDXPE.js",
     hasAction: true,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -2848,7 +3039,7 @@ var routes = {
     id: "routes/demos/params",
     parentId: "root",
     path: "demos/params",
-    module: "/build/routes/demos/params-OKAETW3Z.js",
+    module: "/build/routes/demos/params-UPBRU6EY.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -2858,7 +3049,7 @@ var routes = {
     id: "routes/demos/params/$id",
     parentId: "routes/demos/params",
     path: ":id",
-    module: "/build/routes/demos/params/$id-IW2AKTT7.js",
+    module: "/build/routes/demos/params/$id-ZVGPIF7Z.js",
     hasAction: false,
     hasLoader: true,
     hasCatchBoundary: true,
@@ -2878,14 +3069,14 @@ var routes = {
     id: "routes/index",
     parentId: "root",
     index: true,
-    module: "/build/routes/index-4FLTVRYY.js",
+    module: "/build/routes/index-367WEKCX.js",
     hasAction: false,
     hasLoader: true,
     hasCatchBoundary: false,
     hasErrorBoundary: false
   }
 };
-var url = "/build/manifest-9FA8CEF1.js";
+var url = "/build/manifest-EF00B86E.js";
 var assets_default = {
   version,
   entry,
@@ -3393,7 +3584,7 @@ async function denoHandler(_req) {
 console.log("Listening on http://localhost:8000");
 serve(denoHandler);
 /**
- * @remix-run/react v1.0.6
+ * @remix-run/react v0.0.0-experimental-db4e08b8
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -3403,7 +3594,7 @@ serve(denoHandler);
  * @license MIT
  */
 /**
- * @remix-run/server-runtime v1.0.6
+ * @remix-run/server-runtime v0.0.0-experimental-db4e08b8
  *
  * Copyright (c) Remix Software Inc.
  *
