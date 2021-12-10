@@ -35,7 +35,6 @@ async function denoHandler(_req: Request): Promise<Response> {
       return new Response(files.get(url.pathname), { headers });
     }
 
-    // @ts-expect-error
     let file = await Deno.readFile(`./public${url.pathname}`);
     files.set(url.pathname, file);
 
