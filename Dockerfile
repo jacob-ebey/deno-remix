@@ -26,8 +26,6 @@ RUN npm run build
 # build smaller image for running
 FROM denoland/deno:1.16.4
 
-USER deno
-
 RUN mkdir /app/
 WORKDIR /app/
 
