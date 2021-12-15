@@ -31,5 +31,8 @@ WORKDIR /app/
 
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/public /app/public
+ADD . .
 
-CMD ["deno", "run", "--allow-net", "--allow-read", "./dist/entry.js"]
+RUN deno cache ./dist/entry.js
+
+CMD ["run", "--allow-net", "--allow-read", "./dist/entry.js"]
