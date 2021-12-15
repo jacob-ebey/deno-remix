@@ -26,6 +26,8 @@ RUN npm run build
 # build smaller image for running
 FROM denoland/deno:1.16.4
 
+USER deno
+
 RUN mkdir /app/
 WORKDIR /app/
 
@@ -35,4 +37,5 @@ ADD . .
 
 RUN deno cache ./dist/entry.js
 
-CMD ["run", "--allow-net", "--allow-read", "./dist/entry.js"]
+EXPOSE 8000
+CMD ["deno", "run", "--allow-net", "--allow-read", "./dist/entry.js"]

@@ -611,10 +611,6 @@ var routes2 = {
 
 // deno/entry.ts
 var handler = createRequestHandler(build_exports, {});
-var files = new Map();
-setInterval(() => {
-  files = new Map();
-}, 300);
 async function denoHandler(_req) {
   try {
     let url2 = new URL(_req.url);
@@ -628,11 +624,7 @@ async function denoHandler(_req) {
     } else {
       headers.set("Cache-Control", "public, max-age=600");
     }
-    if (files.has(url2.pathname)) {
-      return new Response(files.get(url2.pathname), { headers });
-    }
     let file = await Deno.readFile(`./public${url2.pathname}`);
-    files.set(url2.pathname, file);
     return new Response(file, { headers });
   } catch (e) {
     if (e.code !== "EACCES" && e.code !== "EISDIR" && e.code !== "ENOENT") {

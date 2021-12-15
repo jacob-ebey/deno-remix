@@ -10,12 +10,6 @@ import * as build from "../build/index.js";
 
 let handler = createRequestHandler(build, {});
 
-let files = new Map<string, Uint8Array>();
-
-setInterval(() => {
-  files = new Map();
-}, 300);
-
 async function denoHandler(_req: Request): Promise<Response> {
   try {
     let url = new URL(_req.url);
@@ -32,12 +26,7 @@ async function denoHandler(_req: Request): Promise<Response> {
       headers.set("Cache-Control", "public, max-age=600");
     }
 
-    if (files.has(url.pathname)) {
-      return new Response(files.get(url.pathname), { headers });
-    }
-
     let file = await Deno.readFile(`./public${url.pathname}`);
-    files.set(url.pathname, file);
 
     return new Response(file, { headers });
   } catch (e: any) {
