@@ -14,7 +14,7 @@
     "watch:server": "deno run --watch=./dist/entry.js --allow-net --allow-read ./dist/entry.js",
     "watchall": "run-p watch:*",
     "dev": "cross-env NODE_ENV=development run-s build:remix build:deno watchall",
-    "start": "cross-env NODE_ENV=production deno run --allow-net --allow-read ./dist/entry.js"
+    "start": "deno run --allow-net --allow-read ./dist/entry.js"
   },
   "dependencies": {
     "@remix-run/cloudflare-workers": "0.0.0-experimental-c73398fb",
