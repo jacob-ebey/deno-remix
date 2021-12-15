@@ -19,15 +19,15 @@
   "dependencies": {
     "@remix-run/cloudflare-workers": "0.0.0-experimental-c73398fb",
     "@remix-run/react": "0.0.0-experimental-c73398fb",
+    "@remix-run/server-runtime": "0.0.0-experimental-c73398fb",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "remix": "0.0.0-experimental-c73398fb"
   },
   "devDependencies": {
     "@remix-run/dev": "0.0.0-experimental-c73398fb",
-    "@types/mime": "^2.0.3",
-    "@types/react": "^17.0.24",
-    "@types/react-dom": "^17.0.9",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
     "cross-env": "^7.0.3",
     "npm-run-all": "^4.1.5",
     "patch-package": "^6.4.7",
