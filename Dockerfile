@@ -36,4 +36,4 @@ ADD . .
 RUN deno cache ./dist/entry.js
 
 EXPOSE 8000
-CMD ["deno", "run", "--allow-net", "--allow-read", "./dist/entry.js"]
+CMD ["run", "--allow-net", "--allow-read", "./dist/entry.js"]
