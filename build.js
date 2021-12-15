@@ -25,6 +25,7 @@ async function build() {
     mainFields: ["module", "browser", "main"],
     bundle: true,
     watch: process.env.NODE_ENV === "development",
+    sourcemap: "external",
     define: {
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "production"
@@ -44,8 +45,8 @@ async function build() {
 
             if (
               isBareModuleId(path) &&
-              path !== "remix" &&
-              !path.startsWith("@remix-run/")
+              path !== "remix"// &&
+              // !path.startsWith("@remix-run/")
               // TODO: figure out why esm.sh can't resolve @remix-run/react
               // !path.startsWith("@remix-run/react")
             ) {

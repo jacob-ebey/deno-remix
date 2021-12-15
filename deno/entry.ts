@@ -1,8 +1,9 @@
 // @ts-ignore
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
-
-import mime from "mime";
-import { createRequestHandler } from "@remix-run/server-runtime";
+// @ts-ignore
+import mime from "https://esm.sh/mime@3.0.0";
+// @ts-ignore
+import { createRequestHandler } from "https://esm.sh/@remix-run/server-runtime@0.0.0-experimental-c73398fb";
 
 // @ts-expect-error
 import * as build from "../build/index.js";
@@ -40,7 +41,7 @@ async function denoHandler(_req: Request): Promise<Response> {
 
     return new Response(file, { headers });
   } catch (e: any) {
-    if (e.code !== "EISDIR" && e.code !== "ENOENT") {
+    if (e.code !== "EACCES" && e.code !== "EISDIR" && e.code !== "ENOENT") {
       throw e;
     }
   }
@@ -48,11 +49,12 @@ async function denoHandler(_req: Request): Promise<Response> {
   try {
     return await handler(_req);
   } catch (e: any) {
-    // if (process.env.NODE_ENV === "development") {
-    return new Response(e.message || e.toString(), {
-      status: 500,
-    });
-    // }
+    console.error(e);
+    if (process.env.NODE_ENV === "development") {
+      return new Response(e.message || e.toString(), {
+        status: 500,
+      });
+    }
 
     return new Response("Internal Error", { status: 500 });
   }

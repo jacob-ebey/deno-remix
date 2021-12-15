@@ -28,7 +28,7 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
   });
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/root.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\root.tsx
 var root_exports = {};
 __export(root_exports, {
   CatchBoundary: () => CatchBoundary,
@@ -39,7 +39,6 @@ __export(root_exports, {
 import {
   Link,
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -53,7 +52,7 @@ var global_default = "/build/_assets/global-4MW7DZR4.css";
 // app/styles/dark.css
 var dark_default = "/build/_assets/dark-APYDFYJA.css";
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/root.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\root.tsx
 var links = () => {
   return [
     { rel: "stylesheet", href: global_default },
@@ -101,7 +100,7 @@ function Document({
   }), /* @__PURE__ */ React.createElement("meta", {
     name: "viewport",
     content: "width=device-width,initial-scale=1"
-  }), title ? /* @__PURE__ */ React.createElement("title", null, title) : null, /* @__PURE__ */ React.createElement(Meta, null), /* @__PURE__ */ React.createElement(Links, null)), /* @__PURE__ */ React.createElement("body", null, children, /* @__PURE__ */ React.createElement(ScrollRestoration, null), /* @__PURE__ */ React.createElement(Scripts, null), process.env.NODE_ENV === "development" && /* @__PURE__ */ React.createElement(LiveReload, null)));
+  }), title ? /* @__PURE__ */ React.createElement("title", null, title) : null, /* @__PURE__ */ React.createElement(Meta, null), /* @__PURE__ */ React.createElement(Links, null)), /* @__PURE__ */ React.createElement("body", null, children, /* @__PURE__ */ React.createElement(ScrollRestoration, null), /* @__PURE__ */ React.createElement(Scripts, null), false));
 }
 function Layout({ children }) {
   return /* @__PURE__ */ React.createElement("div", {
@@ -159,7 +158,7 @@ function RemixLogo() {
   }));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/actions.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\actions.tsx
 var actions_exports = {};
 __export(actions_exports, {
   action: () => action,
@@ -208,7 +207,7 @@ function ActionsDemo() {
   }, /* @__PURE__ */ React.createElement("code", null, "useActionData"))))));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/correct.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\correct.tsx
 var correct_exports = {};
 __export(correct_exports, {
   default: () => NiceWork
@@ -217,7 +216,7 @@ function NiceWork() {
   return /* @__PURE__ */ React.createElement("h1", null, "You got it right!");
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/params.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params.tsx
 var params_exports = {};
 __export(params_exports, {
   default: () => Boundaries,
@@ -245,7 +244,7 @@ function Boundaries() {
   }, "This one will throw an error")))));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/params/index.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params\index.tsx
 var params_exports2 = {};
 __export(params_exports2, {
   default: () => Boundaries2
@@ -256,7 +255,7 @@ function Boundaries2() {
   }, "client errors"), ")"), /* @__PURE__ */ React.createElement("p", null, "Loaders and Actions can throw a ", /* @__PURE__ */ React.createElement("code", null, "Response"), " instead of an error and Remix will render the CatchBoundary instead of the component. This is great when loading data from a database isn't found. As soon as you know you can't render the component normally, throw a 404 response and send your app into the catch boundary. Just like error boundaries, catch boundaries bubble, too."));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/params/$id.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params\$id.tsx
 var id_exports = {};
 __export(id_exports, {
   CatchBoundary: () => CatchBoundary2,
@@ -307,7 +306,7 @@ var meta3 = ({ data }) => {
   };
 };
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/about.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about.tsx
 var about_exports = {};
 __export(about_exports, {
   default: () => Index,
@@ -319,7 +318,7 @@ import { Outlet as Outlet3 } from "remix";
 // app/styles/demos/about.css
 var about_default = "/build/_assets/about-GGM5BPB3.css";
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/about.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about.tsx
 var meta4 = () => {
   return {
     title: "About Remix"
@@ -338,7 +337,7 @@ function Index() {
   }, "read all about nested routes in the docs"), "."), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement(Outlet3, null)));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/about/index.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about\index.tsx
 var about_exports2 = {};
 __export(about_exports2, {
   default: () => AboutIndex
@@ -350,7 +349,7 @@ function AboutIndex() {
   }, "Check out one of them here."))));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/demos/about/whoa.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about\whoa.tsx
 var whoa_exports = {};
 __export(whoa_exports, {
   default: () => AboutIndex2
@@ -362,7 +361,7 @@ function AboutIndex2() {
   }, "Go back to the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " index."))));
 }
 
-// route-module:/Users/jacob/git/remix-deno-deploy/app/routes/index.tsx
+// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Index2,
