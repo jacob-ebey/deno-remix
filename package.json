@@ -5,7 +5,7 @@
   "license": "",
   "scripts": {
     "clean": "rimraf ./.cache ./build ./dist ./public/build",
-    "postinstall": "remix setup cloudflare-workers",
+    "postinstall": "remix setup cloudflare-workers && patch-package",
     "build": "npm run clean && run-s build:remix build:deno",
     "build:deno": "cross-env NODE_ENV=production node ./build.js",
     "build:remix": "remix build",
@@ -17,15 +17,15 @@
     "start": "deno run --allow-net --allow-read ./dist/entry.js"
   },
   "dependencies": {
-    "@remix-run/cloudflare-workers": "0.0.0-experimental-c73398fb",
-    "@remix-run/react": "0.0.0-experimental-c73398fb",
-    "@remix-run/server-runtime": "0.0.0-experimental-c73398fb",
+    "@remix-run/cloudflare-workers": "0.0.0-experimental-56ff64d1",
+    "@remix-run/react": "0.0.0-experimental-56ff64d1",
+    "@remix-run/server-runtime": "0.0.0-experimental-56ff64d1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "remix": "0.0.0-experimental-c73398fb"
+    "remix": "0.0.0-experimental-56ff64d1"
   },
   "devDependencies": {
-    "@remix-run/dev": "0.0.0-experimental-c73398fb",
+    "@remix-run/dev": "0.0.0-experimental-56ff64d1",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "cross-env": "^7.0.3",

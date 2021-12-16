@@ -15,7 +15,14 @@ __export(entry_server_exports, {
   default: () => handleRequest
 });
 import { renderToString } from "react-dom/server";
-import { RemixServer } from "remix";
+
+// node_modules/remix/esm/client.js
+import { Form, Link, Links, LiveReload, Meta, NavLink, Outlet, PrefetchPageLinks, RemixBrowser, RemixServer, Scripts, ScrollRestoration, useActionData, useBeforeUnload, useCatch, useFetcher, useFetchers, useFormAction, useHref, useLoaderData, useLocation, useMatches, useNavigate, useNavigationType, useOutlet, useOutletContext, useParams, useResolvedPath, useSearchParams, useSubmit, useTransition } from "@remix-run/react";
+
+// node_modules/remix/esm/server.js
+import { createCookie, createCookieSessionStorage, createMemorySessionStorage, createSession, createSessionStorage, isCookie, isSession, json, redirect } from "@remix-run/server-runtime";
+
+// app/entry.server.tsx
 function handleRequest(request, responseStatusCode, responseHeaders, remixContext) {
   let markup = renderToString(/* @__PURE__ */ React.createElement(RemixServer, {
     context: remixContext,
@@ -28,7 +35,7 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
   });
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\root.tsx
+// route-module:/Users/jacob/git/deno-remix/app/root.tsx
 var root_exports = {};
 __export(root_exports, {
   CatchBoundary: () => CatchBoundary,
@@ -36,15 +43,6 @@ __export(root_exports, {
   default: () => App,
   links: () => links
 });
-import {
-  Link,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useCatch
-} from "remix";
 
 // app/styles/global.css
 var global_default = "/build/_assets/global-4MW7DZR4.css";
@@ -52,7 +50,7 @@ var global_default = "/build/_assets/global-4MW7DZR4.css";
 // app/styles/dark.css
 var dark_default = "/build/_assets/dark-APYDFYJA.css";
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\root.tsx
+// route-module:/Users/jacob/git/deno-remix/app/root.tsx
 var links = () => {
   return [
     { rel: "stylesheet", href: global_default },
@@ -158,7 +156,7 @@ function RemixLogo() {
   }));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\actions.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/actions.tsx
 var actions_exports = {};
 __export(actions_exports, {
   action: () => action,
@@ -166,7 +164,6 @@ __export(actions_exports, {
   meta: () => meta
 });
 import { useEffect, useRef } from "react";
-import { Form, json, useActionData, redirect } from "remix";
 function meta() {
   return { title: "Actions Demo" };
 }
@@ -207,7 +204,7 @@ function ActionsDemo() {
   }, /* @__PURE__ */ React.createElement("code", null, "useActionData"))))));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\correct.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/correct.tsx
 var correct_exports = {};
 __export(correct_exports, {
   default: () => NiceWork
@@ -216,35 +213,34 @@ function NiceWork() {
   return /* @__PURE__ */ React.createElement("h1", null, "You got it right!");
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/params.tsx
 var params_exports = {};
 __export(params_exports, {
   default: () => Boundaries,
   meta: () => meta2
 });
-import { Link as Link2, Outlet as Outlet2 } from "remix";
 function meta2() {
   return { title: "Boundaries Demo" };
 }
 function Boundaries() {
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix__page"
-  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement(Outlet2, null)), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Click these Links"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement(Outlet, null)), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Click these Links"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "."
-  }, "Start over")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, "Start over")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "one"
-  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "one"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "one"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "two"
-  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "two"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, "Param: ", /* @__PURE__ */ React.createElement("i", null, "two"))), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "this-record-does-not-exist"
-  }, "This will be a 404")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, "This will be a 404")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "shh-its-a-secret"
-  }, "And this will be 401 Unauthorized")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link2, {
+  }, "And this will be 401 Unauthorized")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement(Link, {
     to: "kaboom"
   }, "This one will throw an error")))));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params\index.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/params/index.tsx
 var params_exports2 = {};
 __export(params_exports2, {
   default: () => Boundaries2
@@ -255,7 +251,7 @@ function Boundaries2() {
   }, "client errors"), ")"), /* @__PURE__ */ React.createElement("p", null, "Loaders and Actions can throw a ", /* @__PURE__ */ React.createElement("code", null, "Response"), " instead of an error and Remix will render the CatchBoundary instead of the component. This is great when loading data from a database isn't found. As soon as you know you can't render the component normally, throw a 404 response and send your app into the catch boundary. Just like error boundaries, catch boundaries bubble, too."));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\params\$id.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/params/$id.tsx
 var id_exports = {};
 __export(id_exports, {
   CatchBoundary: () => CatchBoundary2,
@@ -264,13 +260,12 @@ __export(id_exports, {
   loader: () => loader,
   meta: () => meta3
 });
-import { useCatch as useCatch3, json as json3, useLoaderData as useLoaderData2 } from "remix";
 var loader = async ({ params }) => {
   if (params.id === "this-record-does-not-exist") {
     throw new Response("Not Found", { status: 404 });
   }
   if (params.id === "shh-its-a-secret") {
-    throw json3({ webmasterEmail: "hello@remix.run" }, { status: 401 });
+    throw json({ webmasterEmail: "hello@remix.run" }, { status: 401 });
   }
   if (params.id === "kaboom") {
     lol();
@@ -278,13 +273,13 @@ var loader = async ({ params }) => {
   return { param: params.id };
 };
 function ParamDemo() {
-  let data = useLoaderData2();
+  let data = useLoaderData();
   return /* @__PURE__ */ React.createElement("h1", null, "The param is ", /* @__PURE__ */ React.createElement("i", {
     style: { color: "red" }
   }, data.param));
 }
 function CatchBoundary2() {
-  let caught = useCatch3();
+  let caught = useCatch();
   let message;
   switch (caught.status) {
     case 401:
@@ -306,19 +301,18 @@ var meta3 = ({ data }) => {
   };
 };
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/about.tsx
 var about_exports = {};
 __export(about_exports, {
   default: () => Index,
   links: () => links2,
   meta: () => meta4
 });
-import { Outlet as Outlet3 } from "remix";
 
 // app/styles/demos/about.css
 var about_default = "/build/_assets/about-GGM5BPB3.css";
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/about.tsx
 var meta4 = () => {
   return {
     title: "About Remix"
@@ -334,41 +328,38 @@ function Index() {
     className: "about__intro"
   }, /* @__PURE__ */ React.createElement("h2", null, "About Us"), /* @__PURE__ */ React.createElement("p", null, "Ok, so this page isn't really ", /* @__PURE__ */ React.createElement("em", null, "about us"), ", but we did want to show you a few more things Remix can do."), /* @__PURE__ */ React.createElement("p", null, "Did you notice that things look a little different on this page? The CSS that we import in the route file and include in its", " ", /* @__PURE__ */ React.createElement("code", null, "links"), " export is only included on this route and its children."), /* @__PURE__ */ React.createElement("p", null, "Wait a sec...", /* @__PURE__ */ React.createElement("em", null, "its children"), "? To understand what we mean by this,", " ", /* @__PURE__ */ React.createElement("a", {
     href: "https://remix.run/tutorial/4-nested-routes-params"
-  }, "read all about nested routes in the docs"), "."), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement(Outlet3, null)));
+  }, "read all about nested routes in the docs"), "."), /* @__PURE__ */ React.createElement("hr", null), /* @__PURE__ */ React.createElement(Outlet, null)));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about\index.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/about/index.tsx
 var about_exports2 = {};
 __export(about_exports2, {
   default: () => AboutIndex
 });
-import { Link as Link4 } from "remix";
 function AboutIndex() {
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "You are looking at the index route for the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " URL segment, but there are nested routes as well!"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link4, {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "You are looking at the index route for the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " URL segment, but there are nested routes as well!"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link, {
     to: "whoa"
   }, "Check out one of them here."))));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\demos\about\whoa.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/demos/about/whoa.tsx
 var whoa_exports = {};
 __export(whoa_exports, {
   default: () => AboutIndex2
 });
-import { Link as Link5 } from "remix";
 function AboutIndex2() {
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "Whoa, this is a nested route! We render the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " layout route component, and its ", /* @__PURE__ */ React.createElement("code", null, "Outlet"), " renders our route component. \u{1F92F}"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link5, {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", null, "Whoa, this is a nested route! We render the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " layout route component, and its ", /* @__PURE__ */ React.createElement("code", null, "Outlet"), " renders our route component. \u{1F92F}"), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(Link, {
     to: ".."
   }, "Go back to the ", /* @__PURE__ */ React.createElement("code", null, "/about"), " index."))));
 }
 
-// route-module:C:\Users\jacob\Documents\github\deno-remix\app\routes\index.tsx
+// route-module:/Users/jacob/git/deno-remix/app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Index2,
   loader: () => loader2,
   meta: () => meta5
 });
-import { useLoaderData as useLoaderData3, json as json4, Link as Link6 } from "remix";
 var loader2 = () => {
   let data = {
     resources: [
@@ -400,7 +391,7 @@ var loader2 = () => {
       }
     ]
   };
-  return json4(data);
+  return json(data);
 };
 var meta5 = () => {
   return {
@@ -409,13 +400,13 @@ var meta5 = () => {
   };
 };
 function Index2() {
-  let data = useLoaderData3();
+  let data = useLoaderData();
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix__page"
   }, /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h2", null, "Welcome to Remix!!"), /* @__PURE__ */ React.createElement("p", null, "We're stoked that you're here. \u{1F973}"), /* @__PURE__ */ React.createElement("p", null, "Feel free to take a look around the code to see how Remix does things, it might be a bit different than what you\u2019re used to. When you're ready to dive deeper, we've got plenty of resources to get you up-and-running quickly."), /* @__PURE__ */ React.createElement("p", null, "Check out all the demos in this starter, and then just delete the", " ", /* @__PURE__ */ React.createElement("code", null, "app/routes/demos"), " and ", /* @__PURE__ */ React.createElement("code", null, "app/styles/demos"), " ", "folders when you're ready to turn this into your next project.")), /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement("h2", null, "Demos In This App"), /* @__PURE__ */ React.createElement("ul", null, data.demos.map((demo) => /* @__PURE__ */ React.createElement("li", {
     key: demo.to,
     className: "remix__page__resource"
-  }, /* @__PURE__ */ React.createElement(Link6, {
+  }, /* @__PURE__ */ React.createElement(Link, {
     to: demo.to,
     prefetch: "intent"
   }, demo.name)))), /* @__PURE__ */ React.createElement("h2", null, "Resources"), /* @__PURE__ */ React.createElement("ul", null, data.resources.map((resource) => /* @__PURE__ */ React.createElement("li", {
@@ -516,4 +507,24 @@ export {
   entry,
   routes
 };
+/**
+ * @remix-run/react v0.0.0-experimental-56ff64d1
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+/**
+ * @remix-run/server-runtime v0.0.0-experimental-56ff64d1
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
 //# sourceMappingURL=/build/index.js.map

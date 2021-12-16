@@ -43,13 +43,7 @@ async function build() {
               };
             }
 
-            if (
-              isBareModuleId(path) &&
-              path !== "remix"// &&
-              // !path.startsWith("@remix-run/")
-              // TODO: figure out why esm.sh can't resolve @remix-run/react
-              // !path.startsWith("@remix-run/react")
-            ) {
+            if (isBareModuleId(path)) {
               let packageName = getNpmPackageName(path);
 
               if (builtinModules.includes(packageName)) {

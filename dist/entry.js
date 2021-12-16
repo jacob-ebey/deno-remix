@@ -23,22 +23,16 @@ import {
   createElement
 } from "https://esm.sh/react@17.0.2?no-check";
 import { renderToString } from "https://esm.sh/react-dom@17.0.2/server?no-check";
-
-// node_modules/remix/esm/client.js
-import { Form, Link, Links, LiveReload, Meta, NavLink, Outlet, PrefetchPageLinks, RemixBrowser, RemixServer, Scripts, ScrollRestoration, useActionData, useBeforeUnload, useCatch, useFetcher, useFetchers, useFormAction, useHref, useLoaderData, useLocation, useMatches, useNavigate, useNavigationType, useOutlet, useOutletContext, useParams, useResolvedPath, useSearchParams, useSubmit, useTransition } from "https://esm.sh/@remix-run/react@0.0.0-experimental-c73398fb?no-check";
-
-// node_modules/remix/esm/server.js
-import { createCookie, createCookieSessionStorage, createMemorySessionStorage, createSession, createSessionStorage, isCookie, isSession, json, redirect } from "https://esm.sh/@remix-run/server-runtime@0.0.0-experimental-c73398fb?no-check";
-
-// build/index.js
+import { Form, Link, Links, LiveReload, Meta, NavLink, Outlet, PrefetchPageLinks, RemixBrowser, RemixServer, Scripts, ScrollRestoration, useActionData, useBeforeUnload, useCatch, useFetcher, useFetchers, useFormAction, useHref, useLoaderData, useLocation, useMatches, useNavigate, useNavigationType, useOutlet, useOutletContext, useParams, useResolvedPath, useSearchParams, useSubmit, useTransition } from "https://esm.sh/@remix-run/react@0.0.0-experimental-56ff64d1?no-check";
+import { createCookie, createCookieSessionStorage, createMemorySessionStorage, createSession, createSessionStorage, isCookie, isSession, json, redirect } from "https://esm.sh/@remix-run/server-runtime@0.0.0-experimental-56ff64d1?no-check";
 import { useEffect, useRef } from "https://esm.sh/react@17.0.2?no-check";
 
 // build/assets.json
-var version = "ce6ac41d";
+var version = "489d94d1";
 var entry = {
-  module: "/build/entry.client-2I32ZBOC.js",
+  module: "/build/entry.client-IOOFUW56.js",
   imports: [
-    "/build/_shared/chunk-PAAJOYA3.js",
+    "/build/_shared/chunk-7MZGCRYH.js",
     "/build/_shared/chunk-AKSB5QXU.js"
   ]
 };
@@ -46,7 +40,7 @@ var routes = {
   root: {
     id: "root",
     path: "",
-    module: "/build/root-LOQCW6EO.js",
+    module: "/build/root-ST35CKXU.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: true,
@@ -56,7 +50,7 @@ var routes = {
     id: "routes/demos/about",
     parentId: "root",
     path: "demos/about",
-    module: "/build/routes/demos/about-M2CCRZBH.js",
+    module: "/build/routes/demos/about-SL6LI65Q.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -66,7 +60,7 @@ var routes = {
     id: "routes/demos/about/index",
     parentId: "routes/demos/about",
     index: true,
-    module: "/build/routes/demos/about/index-I2GEQTRB.js",
+    module: "/build/routes/demos/about/index-IUZK7QB2.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -76,7 +70,7 @@ var routes = {
     id: "routes/demos/about/whoa",
     parentId: "routes/demos/about",
     path: "whoa",
-    module: "/build/routes/demos/about/whoa-IEH52SCO.js",
+    module: "/build/routes/demos/about/whoa-IBUC6C4O.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -86,7 +80,7 @@ var routes = {
     id: "routes/demos/actions",
     parentId: "root",
     path: "demos/actions",
-    module: "/build/routes/demos/actions-JOENP2QW.js",
+    module: "/build/routes/demos/actions-FGW55I3P.js",
     hasAction: true,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -96,7 +90,7 @@ var routes = {
     id: "routes/demos/correct",
     parentId: "root",
     path: "demos/correct",
-    module: "/build/routes/demos/correct-M4AHMNOP.js",
+    module: "/build/routes/demos/correct-6EX5LMJY.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -106,7 +100,7 @@ var routes = {
     id: "routes/demos/params",
     parentId: "root",
     path: "demos/params",
-    module: "/build/routes/demos/params-TWSDWEXT.js",
+    module: "/build/routes/demos/params-XS66GXNT.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -116,7 +110,7 @@ var routes = {
     id: "routes/demos/params/$id",
     parentId: "routes/demos/params",
     path: ":id",
-    module: "/build/routes/demos/params/$id-BEAHB7RM.js",
+    module: "/build/routes/demos/params/$id-NMEHX7XM.js",
     hasAction: false,
     hasLoader: true,
     hasCatchBoundary: true,
@@ -126,7 +120,7 @@ var routes = {
     id: "routes/demos/params/index",
     parentId: "routes/demos/params",
     index: true,
-    module: "/build/routes/demos/params/index-UE4IVIP5.js",
+    module: "/build/routes/demos/params/index-YHYFZDY5.js",
     hasAction: false,
     hasLoader: false,
     hasCatchBoundary: false,
@@ -136,14 +130,14 @@ var routes = {
     id: "routes/index",
     parentId: "root",
     index: true,
-    module: "/build/routes/index-QUA3R5MC.js",
+    module: "/build/routes/index-GGMZYYSG.js",
     hasAction: false,
     hasLoader: true,
     hasCatchBoundary: false,
     hasErrorBoundary: false
   }
 };
-var url = "/build/manifest-CE6AC41D.js";
+var url = "/build/manifest-489D94D1.js";
 var assets_default = {
   version,
   entry,
@@ -646,7 +640,7 @@ async function denoHandler(_req) {
 console.log("Listening on http://localhost:8000");
 serve(denoHandler);
 /**
- * @remix-run/react v0.0.0-experimental-c73398fb
+ * @remix-run/react v0.0.0-experimental-56ff64d1
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -656,7 +650,7 @@ serve(denoHandler);
  * @license MIT
  */
 /**
- * @remix-run/server-runtime v0.0.0-experimental-c73398fb
+ * @remix-run/server-runtime v0.0.0-experimental-56ff64d1
  *
  * Copyright (c) Remix Software Inc.
  *

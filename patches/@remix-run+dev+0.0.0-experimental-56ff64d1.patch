@@ -1,0 +1,23 @@
+diff --git a/node_modules/@remix-run/dev/compiler.js b/node_modules/@remix-run/dev/compiler.js
+index 11ca193..89c0336 100644
+--- a/node_modules/@remix-run/dev/compiler.js
++++ b/node_modules/@remix-run/dev/compiler.js
+@@ -330,6 +330,7 @@ async function createServerBuild(config, options) {
+     target: options.target,
+     inject: [reactShim],
+     loader: loaders.loaders,
++    mainFields: config.serverModuleFormat === "esm" ? ["module", "browser", "main"] : ["main", "module", "browser"],
+     bundle: true,
+     logLevel: "silent",
+     incremental: options.incremental,
+@@ -347,6 +348,10 @@ async function createServerBuild(config, options) {
+       if (id === "./assets.json" && importer === "<stdin>") return true; // Mark all bare imports as external. They will be require()'d at
+       // runtime from node_modules.
+ 
++      if (id === "remix") {
++        return false;
++      }
++
+       if (isBareModuleId(id)) {
+         let packageName = getNpmPackageName(id);
+ 
