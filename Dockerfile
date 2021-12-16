@@ -31,7 +31,6 @@ WORKDIR /app/
 
 COPY --from=build /app/dist /app/dist
 COPY --from=build /app/public /app/public
-ADD . .
 
 RUN deno cache ./dist/entry.js
 
