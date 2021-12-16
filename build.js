@@ -24,8 +24,8 @@ async function build() {
     platform: "neutral",
     mainFields: ["module", "browser", "main"],
     bundle: true,
+    minify: true,
     watch: process.env.NODE_ENV === "development",
-    sourcemap: "external",
     define: {
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "production"
