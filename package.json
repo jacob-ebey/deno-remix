@@ -11,10 +11,10 @@
     "build:remix": "remix build",
     "watch:deno": "cross-env NODE_ENV=development node ./build.js",
     "watch:remix": "remix watch",
-    "watch:server": "deno run --watch=./dist/entry.js --allow-net --allow-read ./dist/entry.js",
+    "watch:server": "deno run --watch=./dist/entry.js --allow-net --allow-read --allow-env ./dist/entry.js",
     "watchall": "run-p watch:*",
     "dev": "cross-env NODE_ENV=development run-s build:remix build:deno watchall",
-    "start": "deno run --allow-net --allow-read ./dist/entry.js"
+    "start": "deno run --allow-net --allow-read --allow-env ./dist/entry.js"
   },
   "dependencies": {
     "@remix-run/cloudflare-workers": "0.0.0-experimental-56ff64d1",
