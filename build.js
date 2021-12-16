@@ -56,7 +56,6 @@ async function build() {
                 let pkgPath = require.resolve(`${packageName}/package.json`);
                 let pkg = require(pkgPath);
 
-                // console.log(`https://esm.sh/${packageName}@${pkg.version}${importPath}`)
                 return {
                   path: `https://esm.sh/${packageName}@${pkg.version}${importPath}?no-check`,
                   external: true,
