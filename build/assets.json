@@ -1,5 +1,5 @@
 {
-  "version": "489d94d1",
+  "version": "438f00af",
   "entry": {
     "module": "/build/entry.client-IOOFUW56.js",
     "imports": [
@@ -11,9 +11,9 @@
     "root": {
       "id": "root",
       "path": "",
-      "module": "/build/root-ST35CKXU.js",
+      "module": "/build/root-SHAPHJGH.js",
       "hasAction": false,
-      "hasLoader": false,
+      "hasLoader": true,
       "hasCatchBoundary": true,
       "hasErrorBoundary": true
     },
@@ -108,5 +108,5 @@
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-489D94D1.js"
+  "url": "/build/manifest-438F00AF.js"
 }

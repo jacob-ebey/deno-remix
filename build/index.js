@@ -41,7 +41,8 @@ __export(root_exports, {
   CatchBoundary: () => CatchBoundary,
   ErrorBoundary: () => ErrorBoundary,
   default: () => App,
-  links: () => links
+  links: () => links,
+  loader: () => loader
 });
 
 // app/styles/global.css
@@ -61,8 +62,16 @@ var links = () => {
     }
   ];
 };
+var loader = () => {
+  return json({
+    region: Deno.env.get("FLY_REGION")
+  });
+};
 function App() {
-  return /* @__PURE__ */ React.createElement(Document, null, /* @__PURE__ */ React.createElement(Layout, null, /* @__PURE__ */ React.createElement(Outlet, null)));
+  let { region } = useLoaderData();
+  return /* @__PURE__ */ React.createElement(Document, null, /* @__PURE__ */ React.createElement(Layout, {
+    region
+  }, /* @__PURE__ */ React.createElement(Outlet, null)));
 }
 function ErrorBoundary({ error }) {
   console.error(error);
@@ -100,7 +109,10 @@ function Document({
     content: "width=device-width,initial-scale=1"
   }), title ? /* @__PURE__ */ React.createElement("title", null, title) : null, /* @__PURE__ */ React.createElement(Meta, null), /* @__PURE__ */ React.createElement(Links, null)), /* @__PURE__ */ React.createElement("body", null, children, /* @__PURE__ */ React.createElement(ScrollRestoration, null), /* @__PURE__ */ React.createElement(Scripts, null), false));
 }
-function Layout({ children }) {
+function Layout({
+  children,
+  region
+}) {
   return /* @__PURE__ */ React.createElement("div", {
     className: "remix-app"
   }, /* @__PURE__ */ React.createElement("header", {
@@ -128,7 +140,7 @@ function Layout({ children }) {
     className: "remix-app__footer"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "container remix-app__footer-content"
-  }, /* @__PURE__ */ React.createElement("p", null, "\xA9 You!"))));
+  }, /* @__PURE__ */ React.createElement("p", null, "\xA9 You!", region ? ` Rendered in ${region}` : null))));
 }
 function RemixLogo() {
   return /* @__PURE__ */ React.createElement("svg", {
@@ -257,10 +269,10 @@ __export(id_exports, {
   CatchBoundary: () => CatchBoundary2,
   ErrorBoundary: () => ErrorBoundary2,
   default: () => ParamDemo,
-  loader: () => loader,
+  loader: () => loader2,
   meta: () => meta3
 });
-var loader = async ({ params }) => {
+var loader2 = async ({ params }) => {
   if (params.id === "this-record-does-not-exist") {
     throw new Response("Not Found", { status: 404 });
   }
@@ -357,10 +369,10 @@ function AboutIndex2() {
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Index2,
-  loader: () => loader2,
+  loader: () => loader3,
   meta: () => meta5
 });
-var loader2 = () => {
+var loader3 = () => {
   let data = {
     resources: [
       {
