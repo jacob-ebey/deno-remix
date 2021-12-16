@@ -166,7 +166,7 @@ function Layout({
       </div>
       <footer className="remix-app__footer">
         <div className="container remix-app__footer-content">
-          <p>&copy; You!{region ? `Rendered in ${region}` : null}</p>
+          <p>&copy; You!{region ? ` Rendered in ${region}` : null}</p>
         </div>
       </footer>
     </div>
