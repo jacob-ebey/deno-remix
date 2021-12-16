@@ -35,4 +35,4 @@ COPY --from=build /app/public /app/public
 RUN deno cache ./dist/entry.js
 
 EXPOSE 8000
-CMD ["run", "--allow-net", "--allow-read", "./dist/entry.js"]
+CMD ["run", "--allow-net", "--allow-read", "--allow-env", "./dist/entry.js"]
