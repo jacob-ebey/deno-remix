@@ -1,4 +1,5 @@
 import {
+  json,
   Link,
   Links,
   LiveReload,
@@ -7,8 +8,9 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "remix";
-import type { LinksFunction } from "remix";
+import type { LinksFunction, LoaderFunction } from "remix";
 
 import globalStylesUrl from "~/styles/global.css";
 import darkStylesUrl from "~/styles/dark.css";
@@ -25,12 +27,23 @@ export let links: LinksFunction = () => {
   ];
 };
 
+type RootLoaderData = {
+  region?: string;
+};
+
+export let loader: LoaderFunction = () => {
+  return json<RootLoaderData>({
+    region: Deno.env.get("FLY_REGION"),
+  });
+};
+
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
+  let { region } = useLoaderData<RootLoaderData>();
   return (
     <Document>
-      <Layout>
+      <Layout region={region}>
         <Outlet />
       </Layout>
     </Document>
@@ -119,7 +132,13 @@ function Document({
   );
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
+function Layout({
+  children,
+  region,
+}: {
+  children: React.ReactNode;
+  region?: string;
+}) {
   return (
     <div className="remix-app">
       <header className="remix-app__header">
@@ -147,7 +166,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </div>
       <footer className="remix-app__footer">
         <div className="container remix-app__footer-content">
-          <p>&copy; You!</p>
+          <p>&copy; You!{region ? `Rendered in ${region}` : null}</p>
         </div>
       </footer>
     </div>
